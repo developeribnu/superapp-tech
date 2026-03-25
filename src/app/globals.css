@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-gray-950 text-gray-50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent;
+  }
+
+  .card-glass {
+    @apply rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-950 backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-4 py-2 font-medium text-white transition-all hover:from-blue-500 hover:to-cyan-500 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 font-medium text-gray-100 transition-all hover:border-gray-600 hover:bg-gray-800;
+  }
+
+  .section-card {
+    @apply card-glass p-6 transition-all hover:border-gray-700 hover:shadow-xl hover:shadow-blue-500/10;
+  }
+
+  .tool-card {
+    @apply card-glass p-4 transition-all hover:border-cyan-700/50 hover:shadow-lg hover:shadow-cyan-500/10;
+  }
+}
+
+@layer utilities {
+  .text-gradient-blue {
+    @apply bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-purple {
+    @apply bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent;
+  }
+
+  .backdrop-blur-xl {
+    backdrop-filter: blur(20px);
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
