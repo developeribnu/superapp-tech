@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberShield - Pusat Pengetahuan Cybersecurity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .glassmorphism {
+            background: rgba(10, 14, 39, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #f87171 0%, #fb923c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(248, 113, 113, 0.2);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(248, 113, 113, 0.8);
+            }
+        }
+
+        .strength-meter {
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .threat-level-critical {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .threat-level-high {
+            color: #fb923c;
+            font-weight: bold;
+        }
+
+        .threat-level-medium {
+            color: #facc15;
+            font-weight: bold;
+        }
+
+        .threat-level-low {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .vulnerability-card {
+            border-left: 4px solid #f87171;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .vulnerability-card:hover {
+            box-shadow: 0 10px 25px rgba(248, 113, 113, 0.15);
+            transform: translateX(5px);
+        }
+
+        input, textarea, select {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            color: #e2e8f0;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #f87171;
+            box-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+        }
+
+        button {
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f87171 0%, #fb923c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #a1f5f5;
+        }
+
+        .copy-button {
+            float: right;
+            padding: 0.5rem 1rem;
+            background: #475569;
+            color: #e2e8f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .copy-button:hover {
+            background: #64748b;
+        }
+
+        .attack-pattern {
+            border-left: 4px solid #fb923c;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(251, 146, 60, 0.1);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glassmorphism m-4 rounded-lg">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold gradient-text">CyberShield</h1>
+                <div class="flex gap-4">
+                    <span class="text-sm text-slate-400">Pusat Pengetahuan Cybersecurity</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Tab Navigation -->
+        <div class="glassmorphism p-6 mb-8 rounded-lg">
+            <div class="flex flex-wrap gap-3 overflow-x-auto pb-2">
+                <button onclick="switchTab('dashboard')" class="tab-btn px-6 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">Dashboard</button>
+                <button onclick="switchTab('network')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">Network Security</button>
+                <button onclick="switchTab('web')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">Web Security</button>
+                <button onclick="switchTab('crypto')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">Cryptography</button>
+                <button onclick="switchTab('hacking')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">Ethical Hacking</button>
+                <button onclick="switchTab('incident')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">Incident Response</button>
+                <button onclick="switchTab('tools')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">Tools & Resources</button>
+                <button onclick="switchTab('ctf')" class="tab-btn px-6 py-2 rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600">CTF Practice</button>
+            </div>
+        </div>
+
+        <!-- TAB: Dashboard -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="glassmorphism p-6 rounded-lg card-hover">
+                    <p class="text-slate-400 text-sm mb-2">Vulnerabilities Found</p>
+                    <div class="stat-number">127</div>
+                    <p class="text-xs text-slate-500 mt-2">Minggu ini</p>
+                </div>
+                <div class="glassmorphism p-6 rounded-lg card-hover">
+                    <p class="text-slate-400 text-sm mb-2">Critical Issues</p>
+                    <div class="stat-number">8</div>
+                    <p class="text-xs text-red-400 mt-2">Membutuhkan action</p>
+                </div>
+                <div class="glassmorphism p-6 rounded-lg card-hover">
+                    <p class="text-slate-400 text-sm mb-2">Security Score</p>
+                    <div class="stat-number">78%</div>
+                    <p class="text-xs text-slate-500 mt-2">Overall rating</p>
+                </div>
+                <div class="glassmorphism p-6 rounded-lg card-hover">
+                    <p class="text-slate-400 text-sm mb-2">Training Completed</p>
+                    <div class="stat-number">24</div>
+                    <p class="text-xs text-green-400 mt-2">Jam pelatihan</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h2 class="text-2xl font-bold mb-6 gradient-text">Security Status Overview</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-300">Network Security</span>
+                                <span class="text-red-400">42%</span>
+                            </div>
+                            <div class="strength-meter">
+                                <div class="strength-bar bg-red-500" style="width: 42%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-300">Web Application Security</span>
+                                <span class="text-orange-400">68%</span>
+                            </div>
+                            <div class="strength-meter">
+                                <div class="strength-bar bg-orange-500" style="width: 68%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-300">Cryptography Implementation</span>
+                                <span class="text-yellow-400">85%</span>
+                            </div>
+                            <div class="strength-meter">
+                                <div class="strength-bar bg-yellow-500" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-300">Incident Response Readiness</span>
+                                <span class="text-green-400">76%</span>
+                            </div>
+                            <div class="strength-meter">
+                                <div class="strength-bar bg-green-500" style="width: 76%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-300">Access Control</span>
+                                <span class="text-blue-400">88%</span>
+                            </div>
+                            <div class="strength-meter">
+                                <div class="strength-bar bg-blue-500" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h2 class="text-2xl font-bold mb-6 gradient-text">Recent Threats & Alerts</h2>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-red-500">
+                            <p class="font-semibold threat-level-critical">CRITICAL: SQL Injection Detected</p>
+                            <p class="text-slate-400 text-sm mt-1">Login form vulnerable to SQL injection attacks</p>
+                            <p class="text-xs text-slate-500 mt-2">2 jam yang lalu</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-orange-500">
+                            <p class="font-semibold threat-level-high">HIGH: Weak SSL Configuration</p>
+                            <p class="text-slate-400 text-sm mt-1">Server menggunakan TLS 1.0, upgrade ke 1.3</p>
+                            <p class="text-xs text-slate-500 mt-2">5 jam yang lalu</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-semibold threat-level-medium">MEDIUM: Default Credentials Found</p>
+                            <p class="text-slate-400 text-sm mt-1">Admin panel masih menggunakan default password</p>
+                            <p class="text-xs text-slate-500 mt-2">1 hari yang lalu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Network Security -->
+        <div id="network" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Network Security Fundamentals</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-red-400">Network Scanning Concepts</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Port Scanning</p>
+                            <p class="text-slate-400 text-sm">Identifikasi service yang berjalan pada port tertentu</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Vulnerability Scanning</p>
+                            <p class="text-slate-400 text-sm">Deteksi kelemahan keamanan pada sistem</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Network Mapping</p>
+                            <p class="text-slate-400 text-sm">Visualisasi topologi dan devices di network</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Packet Analysis</p>
+                            <p class="text-slate-400 text-sm">Analisis traffic dan payload untuk threat detection</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Firewall Rules Review</p>
+                            <p class="text-slate-400 text-sm">Audit dan optimize firewall configurations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-orange-400">Network Hardening</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Implementasikan VPN untuk remote access</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Enable network segmentation (VLAN)</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Configure IDS/IPS systems</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Implement DDoS protection</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Enable DNS filtering</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Configure network monitoring</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span>Disable unnecessary network services</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glassmorphism p-8 rounded-lg">
+                <h3 class="text-2xl font-bold mb-4 text-yellow-400">Common Network Attacks</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="attack-pattern">
+                        <p class="font-semibold text-red-300 mb-2">DDoS Attack (Distributed Denial of Service)</p>
+                        <p class="text-slate-400 text-sm">Penyerang mengirim traffic berlebihan untuk membuat service tidak tersedia</p>
+                        <p class="text-xs text-slate-500 mt-2">Mitigation: Rate limiting, CDN, firewall rules</p>
+                    </div>
+                    <div class="attack-pattern">
+                        <p class="font-semibold text-red-300 mb-2">Man-in-the-Middle (MITM)</p>
+                        <p class="text-slate-400 text-sm">Penyerang intercept komunikasi untuk mencuri atau memodifikasi data</p>
+                        <p class="text-xs text-slate-500 mt-2">Mitigation: Encryption, certificate pinning, HSTS</p>
+                    </div>
+                    <div class="attack-pattern">
+                        <p class="font-semibold text-red-300 mb-2">Packet Sniffing</p>
+                        <p class="text-slate-400 text-sm">Capture unencrypted network traffic untuk ekstrak sensitive data</p>
+                        <p class="text-xs text-slate-500 mt-2">Mitigation: Use HTTPS, VPN, encrypt data in transit</p>
+                    </div>
+                    <div class="attack-pattern">
+                        <p class="font-semibold text-red-300 mb-2">ARP Spoofing</p>
+                        <p class="text-slate-400 text-sm">Manipulate ARP table untuk redirect traffic ke attacker machine</p>
+                        <p class="text-xs text-slate-500 mt-2">Mitigation: Dynamic ARP inspection, static ARP entries</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Web Security -->
+        <div id="web" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">OWASP Top 10 Security Checklist</h2>
+
+            <div class="glassmorphism p-8 rounded-lg mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-orange-400">OWASP Top 10 2024</h3>
+                <div class="space-y-4">
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-red-400">#1: Broken Access Control</h4>
+                            <span class="threat-level-critical text-sm">CRITICAL</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Pengguna dapat mengakses resources yang seharusnya terbatas</p>
+                        <p class="text-sm text-slate-500">Remediation: Implement proper authorization, use role-based access control (RBAC)</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-red-400">#2: Cryptographic Failures</h4>
+                            <span class="threat-level-critical text-sm">CRITICAL</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Data tidak diencrypt atau menggunakan encryption yang lemah</p>
+                        <p class="text-sm text-slate-500">Remediation: Use strong encryption (AES-256), TLS 1.3, secure password hashing</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-red-400">#3: Injection</h4>
+                            <span class="threat-level-critical text-sm">CRITICAL</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">SQL Injection, Command Injection, LDAP Injection attacks</p>
+                        <p class="text-sm text-slate-500">Remediation: Use parameterized queries, input validation, ORM frameworks</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-orange-400">#4: Insecure Design</h4>
+                            <span class="threat-level-high text-sm">HIGH</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Missing security controls dalam design aplikasi</p>
+                        <p class="text-sm text-slate-500">Remediation: Threat modeling, secure SDLC, security requirements</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-orange-400">#5: Security Misconfiguration</h4>
+                            <span class="threat-level-high text-sm">HIGH</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Default credentials, unnecessary services, verbose error messages</p>
+                        <p class="text-sm text-slate-500">Remediation: Hardening guides, security baselines, configuration management</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-orange-400">#6: Vulnerable & Outdated Components</h4>
+                            <span class="threat-level-high text-sm">HIGH</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Using libraries dengan known vulnerabilities</p>
+                        <p class="text-sm text-slate-500">Remediation: Dependency scanning, regular updates, SCA tools</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-orange-400">#7: Authentication & Session Management</h4>
+                            <span class="threat-level-high text-sm">HIGH</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Weak password policies, session hijacking, exposed credentials</p>
+                        <p class="text-sm text-slate-500">Remediation: MFA, secure session management, password hashing</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-yellow-400">#8: Software & Data Integrity Failures</h4>
+                            <span class="threat-level-medium text-sm">MEDIUM</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Unsafe deserialization, unsigned updates</p>
+                        <p class="text-sm text-slate-500">Remediation: Digital signatures, code signing, secure CI/CD</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-yellow-400">#9: Logging & Monitoring Failures</h4>
+                            <span class="threat-level-medium text-sm">MEDIUM</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Insufficient logging, tidak ada alerting untuk suspicious activities</p>
+                        <p class="text-sm text-slate-500">Remediation: Comprehensive logging, SIEM solutions, alerting</p>
+                    </div>
+
+                    <div class="vulnerability-card glassmorphism">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-yellow-400">#10: Server-Side Request Forgery (SSRF)</h4>
+                            <span class="threat-level-medium text-sm">MEDIUM</span>
+                        </div>
+                        <p class="text-slate-400 mb-3">Server membuat request ke attacker-controlled URLs</p>
+                        <p class="text-sm text-slate-500">Remediation: Input validation, whitelist URLs, network segmentation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Cryptography -->
+        <div id="crypto" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Cryptography Fundamentals</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-400">Symmetric Encryption</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">AES-256 (Advanced Encryption Standard)</p>
+                            <p class="text-slate-400 text-sm">Industry standard, 256-bit keys, secure untuk data sensitif</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">ChaCha20</p>
+                            <p class="text-slate-400 text-sm">Modern stream cipher, lebih cepat di hardware terbatas</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">XChaCha20-Poly1305</p>
+                            <p class="text-slate-400 text-sm">Authenticated encryption dengan extended nonce</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-400">Asymmetric Encryption</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">RSA-2048+</p>
+                            <p class="text-slate-400 text-sm">Publikasi-private key cryptography, key exchange</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Elliptic Curve Cryptography (ECC)</p>
+                            <p class="text-slate-400 text-sm">Lebih efisien, same security dengan key lebih kecil</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Post-Quantum Cryptography</p>
+                            <p class="text-slate-400 text-sm">Protection terhadap quantum computing attacks</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-green-400">Hashing Algorithms</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">SHA-256</p>
+                            <p class="text-slate-400 text-sm">Cryptographic hash, 256-bit output, widely used</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">SHA-3</p>
+                            <p class="text-slate-400 text-sm">Latest standard, sponge construction, resistant to attacks</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">bcrypt / Argon2</p>
+                            <p class="text-slate-400 text-sm">Password hashing dengan salt, resistant ke brute force</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-yellow-400">Digital Signatures</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">ECDSA (Elliptic Curve DSA)</p>
+                            <p class="text-slate-400 text-sm">Efficient digital signatures, code signing</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">Ed25519</p>
+                            <p class="text-slate-400 text-sm">Modern public-key signature system, fast & secure</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200 mb-2">RSA-PSS</p>
+                            <p class="text-slate-400 text-sm">Probabilistic signature scheme, dengan padding</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Ethical Hacking -->
+        <div id="hacking" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Ethical Hacking & Penetration Testing</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-red-400">Reconnaissance</h3>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Passive Information Gathering</p>
+                            <p class="text-slate-400 text-sm">OSINT, public records, domain info</p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Active Scanning</p>
+                            <p class="text-slate-400 text-sm">Port scanning, network enumeration</p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Enumeration</p>
+                            <p class="text-slate-400 text-sm">Extract usernames, services, shares</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-orange-400">Vulnerability Assessment</h3>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Scanning & Testing</p>
+                            <p class="text-slate-400 text-sm">Automated scanning, manual testing</p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Analysis & Prioritization</p>
+                            <p class="text-slate-400 text-sm">Risk scoring, CVSS ratings</p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Reporting</p>
+                            <p class="text-slate-400 text-sm">Detailed findings & recommendations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-yellow-400">Exploitation & Post-Exploitation</h3>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Exploit Development</p>
+                            <p class="text-slate-400 text-sm">Craft exploits, proof of concept</p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Privilege Escalation</p>
+                            <p class="text-slate-400 text-sm">Gain higher privileges, lateral movement</p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg">
+                            <p class="font-semibold text-slate-200">Persistence & Covering Tracks</p>
+                            <p class="text-slate-400 text-sm">Maintain access (ethical testing only)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glassmorphism p-8 rounded-lg">
+                <h3 class="text-2xl font-bold mb-4 text-green-400">Penetration Testing Methodology</h3>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-red-400 mb-2">1</div>
+                        <p class="font-semibold text-slate-200">Planning & Scoping</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-orange-400 mb-2">2</div>
+                        <p class="font-semibold text-slate-200">Reconnaissance</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-yellow-400 mb-2">3</div>
+                        <p class="font-semibold text-slate-200">Scanning & Enumeration</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-green-400 mb-2">4</div>
+                        <p class="font-semibold text-slate-200">Exploitation</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-blue-400 mb-2">5</div>
+                        <p class="font-semibold text-slate-200">Reporting</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Incident Response -->
+        <div id="incident" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Incident Response Framework</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-red-400">6 Phases of Incident Response</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-red-500">
+                            <p class="font-semibold text-slate-200 mb-1">1. Preparation</p>
+                            <p class="text-slate-400 text-sm">Tools, training, processes, policies</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-orange-500">
+                            <p class="font-semibold text-slate-200 mb-1">2. Detection & Analysis</p>
+                            <p class="text-slate-400 text-sm">Identify dan analyze security incident</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-semibold text-slate-200 mb-1">3. Containment</p>
+                            <p class="text-slate-400 text-sm">Stop spread, minimize impact (short/long-term)</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-green-500">
+                            <p class="font-semibold text-slate-200 mb-1">4. Eradication</p>
+                            <p class="text-slate-400 text-sm">Remove attacker access & malware</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-semibold text-slate-200 mb-1">5. Recovery</p>
+                            <p class="text-slate-400 text-sm">Restore systems ke normal operation</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-purple-500">
+                            <p class="font-semibold text-slate-200 mb-1">6. Post-Incident Activities</p>
+                            <p class="text-slate-400 text-sm">Lessons learned, improvements, documentation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-400">Incident Response Checklist</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Establish incident response team</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Create communication plan</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Document evidence preservation</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Notify stakeholders appropriately</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Enable forensic capabilities</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Test incident response procedures</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Conduct post-incident reviews</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <input type="checkbox" class="checkbox-custom mr-3">
+                            <span class="text-sm">Update IR procedures regularly</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Tools & Resources -->
+        <div id="tools" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Security Tools & Resources Reference</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-400">Network Tools</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔍 Nmap</p>
+                            <p class="text-slate-400 text-sm">Network scanner untuk discover hosts dan open ports</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🌐 Wireshark</p>
+                            <p class="text-slate-400 text-sm">Packet analyzer untuk network traffic inspection</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔗 tcpdump</p>
+                            <p class="text-slate-400 text-sm">Command-line packet capture tool</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">📡 Metasploit</p>
+                            <p class="text-slate-400 text-sm">Penetration testing framework dengan exploits</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-400">Web Security Tools</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔓 Burp Suite</p>
+                            <p class="text-slate-400 text-sm">Web security testing platform, proxy & scanner</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🧩 OWASP ZAP</p>
+                            <p class="text-slate-400 text-sm">Free web vulnerability scanner & fuzzer</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔎 SQLmap</p>
+                            <p class="text-slate-400 text-sm">Automated SQL injection detection & exploitation</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🌐 nikto</p>
+                            <p class="text-slate-400 text-sm">Web server vulnerability scanner</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-green-400">Vulnerability & Assessment Tools</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔍 Qualys QVMA</p>
+                            <p class="text-slate-400 text-sm">Cloud-based vulnerability management</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🛡️ Nessus</p>
+                            <p class="text-slate-400 text-sm">Vulnerability scanner dengan extensive plugins</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">📊 OpenVAS</p>
+                            <p class="text-slate-400 text-sm">Open-source vulnerability assessment tool</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔐 Hashcat</p>
+                            <p class="text-slate-400 text-sm">Password cracking tool untuk hash breaking</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-yellow-400">Forensics & Response Tools</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔍 Velociraptor</p>
+                            <p class="text-slate-400 text-sm">Endpoint visibility & collection platform</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">📁 FTK Imager</p>
+                            <p class="text-slate-400 text-sm">Disk image acquisition & forensics</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔎 The Hive</p>
+                            <p class="text-slate-400 text-sm">Incident response & investigation platform</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">📊 Splunk</p>
+                            <p class="text-slate-400 text-sm">Log aggregation & SIEM platform</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: CTF Practice -->
+        <div id="ctf" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">CTF (Capture The Flag) Practice</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-400">CTF Challenges Categories</h3>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-4 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <p class="font-semibold text-blue-300">🔐 Cryptography</p>
+                            <p class="text-slate-400 text-sm">Break encryption, analyze ciphers, decode messages</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <p class="font-semibold text-purple-300">💻 Reverse Engineering</p>
+                            <p class="text-slate-400 text-sm">Analyze binaries, understand code flow, patch</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <p class="font-semibold text-green-300">🌐 Web Exploitation</p>
+                            <p class="text-slate-400 text-sm">SQL injection, XSS, CSRF, directory traversal</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <p class="font-semibold text-yellow-300">📡 Networking</p>
+                            <p class="text-slate-400 text-sm">Packet analysis, traffic inspection, protocol</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <p class="font-semibold text-orange-300">🔍 Forensics</p>
+                            <p class="text-slate-400 text-sm">Recover data, analyze logs, find hidden info</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg cursor-pointer hover:bg-slate-700">
+                            <p class="font-semibold text-red-300">⚙️ Misc & Scripting</p>
+                            <p class="text-slate-400 text-sm">Writeups, automation, custom tools</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-400">Popular CTF Platforms</h3>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🎯 HackTheBox</p>
+                            <p class="text-slate-400 text-sm">Realistic machines, labs, dan championships</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔓 TryHackMe</p>
+                            <p class="text-slate-400 text-sm">Interactive learning paths & CTF challenges</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🏆 PicoCTF</p>
+                            <p class="text-slate-400 text-sm">Beginner-friendly seasonal CTF competition</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">⚡ OverTheWire</p>
+                            <p class="text-slate-400 text-sm">Wargames dengan progresif difficulty levels</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <p class="font-semibold text-slate-200">🔥 DarkCTF & Autres</p>
+                            <p class="text-slate-400 text-sm">Seasonal CTF events, kompetitif & komunitas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glassmorphism p-8 rounded-lg">
+                <h3 class="text-2xl font-bold mb-6 text-green-400">Sample CTF Challenge</h3>
+                <div class="bg-slate-800 p-6 rounded-lg mb-4">
+                    <h4 class="font-bold text-slate-200 mb-3">Challenge: Simple Cipher</h4>
+                    <p class="text-slate-400 mb-4">Encrypted text: "KHOOR ZRUOG"</p>
+                    <p class="text-slate-400 mb-4">Hint: Caesar cipher dengan shift value tertentu</p>
+                    <div class="code-block mb-4">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre># Solution Approach:
+# 1. Test semua kemungkinan shift (0-25)
+# 2. Lihat mana yang menghasilkan meaningful text
+# 3. Ekstrak flag dari plaintext
+
+shift = 3  # Correct shift
+plaintext = ""
+for char in encrypted:
+    if char.isalpha():
+        plaintext += chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+    else:
+        plaintext += char
+
+# Result: "HELLO WORLD"
+# Flag: picoCTF{helloworld}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Strength Checker (Global Tool) -->
+        <div id="password-checker" class="glassmorphism p-8 rounded-lg mt-8">
+            <h2 class="text-2xl font-bold mb-6 gradient-text">Interactive Password Strength Checker</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-3">Enter Password to Check:</label>
+                    <input type="password" id="passwordInput" placeholder="Type a password..." class="w-full px-4 py-3 rounded-lg mb-4" oninput="checkPasswordStrength()">
+                    <div class="strength-meter mb-2">
+                        <div id="strengthBar" class="strength-bar bg-gray-400" style="width: 0%"></div>
+                    </div>
+                    <p id="strengthText" class="text-slate-400 text-sm">Password strength: -</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-200 mb-3">Requirements Checklist:</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm">
+                            <span id="req1" class="text-slate-400 mr-2">✗</span>
+                            <span>Minimal 8 karakter</span>
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <span id="req2" class="text-slate-400 mr-2">✗</span>
+                            <span>Huruf uppercase (A-Z)</span>
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <span id="req3" class="text-slate-400 mr-2">✗</span>
+                            <span>Huruf lowercase (a-z)</span>
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <span id="req4" class="text-slate-400 mr-2">✗</span>
+                            <span>Angka (0-9)</span>
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <span id="req5" class="text-slate-400 mr-2">✗</span>
+                            <span>Special chars (!@#$%)</span>
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <span id="req6" class="text-slate-400 mr-2">✗</span>
+                            <span>Minimal 12 karakter (recommended)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 pb-8">
+        <div class="glassmorphism mx-4 p-6 rounded-lg text-center text-slate-400 text-sm">
+            <p>CyberShield © 2026 - Pusat Pengetahuan Cybersecurity</p>
+            <p class="mt-2">Protect, Detect, and Respond to Cyber Threats</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-slate-700', 'hover:bg-slate-600');
+            });
+            event.target.classList.remove('bg-slate-700', 'hover:bg-slate-600');
+            event.target.classList.add('bg-red-600', 'hover:bg-red-700');
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('passwordInput').value;
+            let strength = 0;
+            let feedback = [];
+
+            // Check requirements
+            const req1 = password.length >= 8;
+            const req2 = /[A-Z]/.test(password);
+            const req3 = /[a-z]/.test(password);
+            const req4 = /[0-9]/.test(password);
+            const req5 = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            const req6 = password.length >= 12;
+
+            // Update requirement indicators
+            document.getElementById('req1').textContent = req1 ? '✓' : '✗';
+            document.getElementById('req1').style.color = req1 ? '#4ade80' : '#64748b';
+            document.getElementById('req2').textContent = req2 ? '✓' : '✗';
+            document.getElementById('req2').style.color = req2 ? '#4ade80' : '#64748b';
+            document.getElementById('req3').textContent = req3 ? '✓' : '✗';
+            document.getElementById('req3').style.color = req3 ? '#4ade80' : '#64748b';
+            document.getElementById('req4').textContent = req4 ? '✓' : '✗';
+            document.getElementById('req4').style.color = req4 ? '#4ade80' : '#64748b';
+            document.getElementById('req5').textContent = req5 ? '✓' : '✗';
+            document.getElementById('req5').style.color = req5 ? '#4ade80' : '#64748b';
+            document.getElementById('req6').textContent = req6 ? '✓' : '✗';
+            document.getElementById('req6').style.color = req6 ? '#4ade80' : '#64748b';
+
+            // Calculate strength
+            if (req1) strength += 20;
+            if (req2) strength += 20;
+            if (req3) strength += 20;
+            if (req4) strength += 20;
+            if (req5) strength += 20;
+
+            // Update strength bar
+            const bar = document.getElementById('strengthBar');
+            const text = document.getElementById('strengthText');
+            bar.style.width = strength + '%';
+
+            if (password.length === 0) {
+                text.textContent = 'Password strength: -';
+                bar.className = 'strength-bar bg-gray-400';
+            } else if (strength < 40) {
+                text.textContent = 'Password strength: Sangat Lemah ⚠️';
+                bar.className = 'strength-bar bg-red-600';
+            } else if (strength < 60) {
+                text.textContent = 'Password strength: Lemah';
+                bar.className = 'strength-bar bg-orange-500';
+            } else if (strength < 80) {
+                text.textContent = 'Password strength: Sedang';
+                bar.className = 'strength-bar bg-yellow-500';
+            } else {
+                text.textContent = 'Password strength: Kuat 🔒';
+                bar.className = 'strength-bar bg-green-500';
+            }
+        }
+
+        function copyCode(button) {
+            const code = button.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const original = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = original;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

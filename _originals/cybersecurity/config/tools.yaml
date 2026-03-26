@@ -1,0 +1,165 @@
+# CYBERSEC AI v4.0 - heyibnu.com Tool Integration
+# Maps platform tools to AI guidance capabilities.
+
+tool_categories:
+  password_tools:
+    name: "Password Tools"
+    tools:
+      password_strength_analyzer:
+        id: "password_strength_analyzer"
+        name: "Password Strength Analyzer"
+        description: "Analyze password strength with entropy calculations"
+        ai_enhancements:
+          - "Detailed entropy calculations"
+          - "Crack time estimation (current GPU capabilities)"
+          - "Specific improvement suggestions"
+          - "Common pattern warnings"
+          - "Breach database cross-reference guidance"
+      password_generator:
+        id: "password_generator"
+        name: "Secure Password Generator"
+        description: "Generate cryptographically secure passwords"
+        ai_enhancements:
+          - "CSPRNG explanation"
+          - "Context-specific settings guidance"
+          - "Passphrase alternatives"
+          - "Password manager integration tips"
+
+  hash_tools:
+    name: "Hash Generator"
+    tools:
+      hash_generator:
+        id: "hash_generator"
+        name: "Hash Generator"
+        description: "Generate hashes with MD5, SHA-1, SHA-256, SHA-512, bcrypt"
+        ai_enhancements:
+          - "Algorithm comparison and security status"
+          - "Use case guidance"
+          - "Attack resistance analysis"
+        algorithm_status:
+          md5:
+            status: "broken"
+            label: "BROKEN - collisions since 2004"
+          sha1:
+            status: "deprecated"
+            label: "DEPRECATED - collisions since 2017"
+          sha256:
+            status: "secure"
+            label: "SECURE - current standard"
+          sha512:
+            status: "secure"
+            label: "SECURE - quantum-resistant considerations"
+          bcrypt:
+            status: "recommended"
+            label: "BEST for passwords - slow by design"
+
+  encoding_tools:
+    name: "Encoding Tools"
+    tools:
+      encoder_decoder:
+        id: "encoder_decoder"
+        name: "Encoding Tools"
+        description: "Encode/decode Base64, Hex, URL, Binary"
+        ai_enhancements:
+          - "Encoding vs encryption distinction"
+          - "Use case explanations"
+          - "Security implications warning"
+
+  encryption_tools:
+    name: "Encryption Tools"
+    tools:
+      encryption_tool:
+        id: "encryption_tool"
+        name: "Encryption Tool"
+        description: "Encrypt/decrypt with AES, RSA, ChaCha20"
+        ai_enhancements:
+          - "Algorithm selection guidance"
+          - "Key management best practices"
+          - "Mode selection (GCM, CBC, CTR)"
+        mode_status:
+          gcm:
+            status: "recommended"
+            label: "Authenticated encryption - prevents tampering"
+          cbc:
+            status: "acceptable"
+            label: "Requires separate HMAC for integrity"
+          ecb:
+            status: "dangerous"
+            label: "NEVER use - patterns visible in ciphertext"
+
+  network_tools:
+    name: "Network Tools"
+    tools:
+      network_scanner:
+        id: "network_scanner"
+        name: "Network Tools"
+        description: "Port scanning, DNS lookup, traceroute"
+        ai_enhancements:
+          - "Scan result interpretation"
+          - "Service identification"
+          - "Security implications"
+          - "Ethical reminders"
+
+  hacker_playground:
+    name: "Hacker Playground"
+    tools:
+      live_coding:
+        id: "live_coding"
+        name: "Live Coding"
+        description: "Real-time code explanation"
+      network_scan:
+        id: "network_scan"
+        name: "Network Scan"
+        description: "Nmap-like port scanning simulation"
+      exploit_run:
+        id: "exploit_run"
+        name: "Exploit Run"
+        description: "Metasploit-style exploitation simulation"
+      threat_feed:
+        id: "threat_feed"
+        name: "Threat Feed"
+        description: "Real-time IOC display"
+      hash_crack:
+        id: "hash_crack"
+        name: "Hash Crack"
+        description: "Password cracking simulation"
+      packet_capture:
+        id: "packet_capture"
+        name: "Packet Capture"
+        description: "Wireshark-style packet analysis"
+      system_pwn:
+        id: "system_pwn"
+        name: "System Pwn"
+        description: "Privilege escalation simulation"
+      ctf_challenge:
+        id: "ctf_challenge"
+        name: "CTF Challenge"
+        description: "Capture the Flag exercises"
+      firewall_bypass:
+        id: "firewall_bypass"
+        name: "Firewall Bypass"
+        description: "Educational evasion techniques"
+      global_threats:
+        id: "global_threats"
+        name: "Global Threats"
+        description: "Threat landscape metrics"
+      siem_logs:
+        id: "siem_logs"
+        name: "SIEM Logs"
+        description: "Security event correlation"
+      crypto_lab:
+        id: "crypto_lab"
+        name: "Crypto Lab"
+        description: "Cryptanalysis scenarios"
+      phishing_quiz:
+        id: "phishing_quiz"
+        name: "Phishing Quiz"
+        description: "Social engineering awareness"
+      malware_lab:
+        id: "malware_lab"
+        name: "Malware Lab"
+        description: "Safe malware behavior simulation"
+      net_flow:
+        id: "net_flow"
+        name: "Net Flow"
+        description: "Network traffic analysis"

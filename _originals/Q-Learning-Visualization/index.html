@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Learn Visual - Reinforcement Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.8);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes agentMove {
+            0% { left: 0; top: 0; }
+            25% { left: 100%; top: 0; }
+            50% { left: 100%; top: 100%; }
+            75% { left: 0; top: 100%; }
+            100% { left: 0; top: 0; }
+        }
+
+        .slide-in {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .agent-animation {
+            animation: agentMove 8s linear infinite;
+        }
+
+        .glassmorphism {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .glassmorphism-light {
+            background: rgba(71, 85, 105, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .q-table {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .q-cell {
+            padding: 12px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .q-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .state-label {
+            background: rgba(59, 130, 246, 0.1);
+            color: #93c5fd;
+            font-weight: 700;
+        }
+
+        .q-value-low {
+            background: rgba(0, 0, 0, 0.3);
+            color: rgba(148, 163, 184, 0.7);
+        }
+
+        .q-value-medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .q-value-high {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .bellman-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .algorithm-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.5);
+            border-left: 3px solid #3b82f6;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        .step-number {
+            min-width: 32px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .concept-box {
+            background: rgba(71, 85, 105, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .concept-box:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+
+        .nav-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #93c5fd;
+        }
+
+        .nav-btn:not(.active) {
+            color: rgba(148, 163, 184, 0.7);
+        }
+
+        .nav-btn:not(.active):hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .grid-world {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            position: relative;
+            background: rgba(30, 41, 59, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .grid-cell:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .grid-cell.agent {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .grid-cell.target {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .grid-cell.obstacle {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            cursor: not-allowed;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: rgba(203, 213, 225, 0.9);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 8px 0;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(71, 85, 105, 0.4));
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(148, 163, 184, 0.5);
+            font-size: 14px;
+        }
+
+        .reward-chart {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .bar {
+            display: inline-block;
+            width: 8px;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+            margin: 0 4px;
+            transition: height 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 overflow-x-hidden">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glassmorphism border-b border-slate-800">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="float-animation w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <span class="text-xl font-bold">🤖</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold gradient-text">Q-Learn Visual</h1>
+                    <p class="text-xs text-slate-400">Pusat Pembelajaran Reinforcement Learning</p>
+                </div>
+            </div>
+            <div class="hidden md:flex gap-4 text-sm">
+                <button class="nav-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+                <button class="nav-btn" onclick="switchTab('basics')">Dasar</button>
+                <button class="nav-btn" onclick="switchTab('qlearning')">Q-Learning</button>
+                <button class="nav-btn" onclick="switchTab('visualization')">Visualisasi</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="space-y-8 slide-in">
+            <h2 class="text-4xl font-bold gradient-text">Reinforcement Learning Hub</h2>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glassmorphism-light card-hover rounded-xl p-6">
+                    <p class="text-slate-400 text-sm mb-2">Episode Dilatih</p>
+                    <p class="text-4xl font-bold text-blue-400">5000</p>
+                    <p class="text-xs text-slate-400 mt-3">Training selesai</p>
+                </div>
+
+                <div class="glassmorphism-light card-hover rounded-xl p-6">
+                    <p class="text-slate-400 text-sm mb-2">Reward Tertinggi</p>
+                    <p class="text-4xl font-bold text-purple-400">98.5</p>
+                    <p class="text-xs text-slate-400 mt-3">Score maksimal</p>
+                </div>
+
+                <div class="glassmorphism-light card-hover rounded-xl p-6">
+                    <p class="text-slate-400 text-sm mb-2">Convergence</p>
+                    <p class="text-4xl font-bold text-green-400">92%</p>
+                    <p class="text-xs text-slate-400 mt-3">Policy konvergen</p>
+                </div>
+
+                <div class="glassmorphism-light card-hover rounded-xl p-6">
+                    <p class="text-slate-400 text-sm mb-2">Learning Rate</p>
+                    <p class="text-4xl font-bold text-yellow-400">0.1</p>
+                    <p class="text-xs text-slate-400 mt-3">Alpha parameter</p>
+                </div>
+            </div>
+
+            <!-- Quick Overview -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">Pengenalan Q-Learning</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="concept-box card-hover">
+                        <h4 class="text-lg font-bold text-blue-400 mb-3">🎯 Objective</h4>
+                        <p class="text-sm text-slate-400">Belajar policy optimal tanpa memerlukan model lingkungan</p>
+                    </div>
+
+                    <div class="concept-box card-hover">
+                        <h4 class="text-lg font-bold text-purple-400 mb-3">⚡ Aksi</h4>
+                        <p class="text-sm text-slate-400">Agent memilih action terbaik dari setiap state</p>
+                    </div>
+
+                    <div class="concept-box card-hover">
+                        <h4 class="text-lg font-bold text-pink-400 mb-3">🎲 Exploration</h4>
+                        <p class="text-sm text-slate-400">Balance antara eksplorasi & eksploitasi reward</p>
+                    </div>
+
+                    <div class="concept-box card-hover">
+                        <h4 class="text-lg font-bold text-green-400 mb-3">🧠 Q-Table</h4>
+                        <p class="text-sm text-slate-400">Tabel yang menyimpan nilai Q untuk setiap state-action</p>
+                    </div>
+
+                    <div class="concept-box card-hover">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-3">🔄 Update</h4>
+                        <p class="text-sm text-slate-400">Perbarui Q-values berdasarkan pengalaman</p>
+                    </div>
+
+                    <div class="concept-box card-hover">
+                        <h4 class="text-lg font-bold text-yellow-400 mb-3">🎁 Reward</h4>
+                        <p class="text-sm text-slate-400">Signal feedback dari environment</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid World Visualization -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">Grid World Environment</h3>
+                <p class="text-sm text-slate-400 mb-6">Simulasi sederhana: Agent mencari Goal, menghindari Obstacle</p>
+                <div class="grid-world">
+                    <div class="grid-cell agent">🤖</div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell obstacle">🚫</div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell obstacle">🚫</div>
+                    <div class="grid-cell"></div>
+
+                    <div class="grid-cell obstacle">🚫</div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell obstacle">🚫</div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell target">🎯</div>
+                </div>
+                <p class="text-xs text-slate-400 mt-4">State: 0-24 | Actions: [Up, Down, Left, Right] | Reward: Goal=+1, Obstacle=-1</p>
+            </div>
+        </section>
+
+        <!-- Basics Section -->
+        <section id="basics" class="hidden space-y-8 slide-in">
+            <h2 class="text-3xl font-bold gradient-text">Konsep Dasar RL</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Key Concepts -->
+                <div class="glassmorphism-light rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-400">Komponen Utama</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <p class="font-semibold text-slate-100 mb-2">🌍 Environment</p>
+                            <p class="text-sm text-slate-400">Dunia tempat agent berinteraksi</p>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <p class="font-semibold text-slate-100 mb-2">🤖 Agent</p>
+                            <p class="text-sm text-slate-400">Entitas yang belajar dan mengambil keputusan</p>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <p class="font-semibold text-slate-100 mb-2">📍 State (s)</p>
+                            <p class="text-sm text-slate-400">Kondisi saat ini dari environment</p>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <p class="font-semibold text-slate-100 mb-2">🎮 Action (a)</p>
+                            <p class="text-sm text-slate-400">Pilihan yang dapat diambil agent</p>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <p class="font-semibold text-slate-100 mb-2">🎁 Reward (r)</p>
+                            <p class="text-sm text-slate-400">Feedback numerik dari lingkungan</p>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <p class="font-semibold text-slate-100 mb-2">📋 Policy (π)</p>
+                            <p class="text-sm text-slate-400">Strategi yang memetakan state ke action</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent-Environment Interaction -->
+                <div class="glassmorphism-light rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-400">Siklus Interaksi</h3>
+                    <div class="algorithm-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p class="font-semibold text-slate-100">Observasi State</p>
+                            <p class="text-sm text-slate-400">Agent melihat state saat ini dari environment</p>
+                        </div>
+                    </div>
+
+                    <div class="algorithm-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <p class="font-semibold text-slate-100">Pilih Action</p>
+                            <p class="text-sm text-slate-400">Agent memilih action berdasarkan policy</p>
+                        </div>
+                    </div>
+
+                    <div class="algorithm-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <p class="font-semibold text-slate-100">Eksekusi Action</p>
+                            <p class="text-sm text-slate-400">Action dikirim ke environment</p>
+                        </div>
+                    </div>
+
+                    <div class="algorithm-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <p class="font-semibold text-slate-100">Terima Feedback</p>
+                            <p class="text-sm text-slate-400">Dapatkan reward dan state baru dari environment</p>
+                        </div>
+                    </div>
+
+                    <div class="algorithm-step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <p class="font-semibold text-slate-100">Perbarui Knowledge</p>
+                            <p class="text-sm text-slate-400">Update policy atau value function</p>
+                        </div>
+                    </div>
+
+                    <div class="algorithm-step">
+                        <div class="step-number">6</div>
+                        <div>
+                            <p class="font-semibold text-slate-100">Ulangi</p>
+                            <p class="text-sm text-slate-400">Kembali ke langkah 1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MDP Diagram -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-pink-400">Markov Decision Process (MDP)</h3>
+                <div class="bg-slate-900/50 rounded-lg p-8 border border-slate-700 text-center">
+                    <div class="text-sm text-slate-400 space-y-4">
+                        <div class="inline-block px-4 py-3 bg-blue-500/20 border border-blue-400/50 rounded-lg">
+                            <p class="font-semibold text-blue-300">State (s)</p>
+                        </div>
+                        <p class="text-lg">↓ Action (a) ↓</p>
+                        <div class="inline-block px-4 py-3 bg-purple-500/20 border border-purple-400/50 rounded-lg">
+                            <p class="font-semibold text-purple-300">Environment</p>
+                        </div>
+                        <p class="text-lg">↓ Reward (r) & Next State (s') ↓</p>
+                        <div class="inline-block px-4 py-3 bg-pink-500/20 border border-pink-400/50 rounded-lg">
+                            <p class="font-semibold text-pink-300">Agent learns</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Q-Learning Section -->
+        <section id="qlearning" class="hidden space-y-8 slide-in">
+            <h2 class="text-3xl font-bold gradient-text">Q-Learning Algorithm</h2>
+
+            <!-- Bellman Equation -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-blue-400">Bellman Equation</h3>
+                <div class="bellman-card mb-6">
+                    <p class="text-center text-lg mb-4">Q(s, a) = r + γ max Q(s', a')</p>
+                    <p class="text-center text-sm text-slate-300 space-y-2">
+                        <span class="block">Nilai Q untuk state-action = reward + discounted max future value</span>
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-blue-300 mb-2">Q(s, a)</p>
+                        <p class="text-sm text-slate-400">Quality value untuk state-action pair</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-blue-300 mb-2">r</p>
+                        <p class="text-sm text-slate-400">Immediate reward dari action</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-blue-300 mb-2">γ (gamma)</p>
+                        <p class="text-sm text-slate-400">Discount factor (0-1), bobot future rewards</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-blue-300 mb-2">s', a'</p>
+                        <p class="text-sm text-slate-400">Next state dan best action dari state tersebut</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q-Learning Update Rule -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-purple-400">Update Rule</h3>
+                <div class="bellman-card mb-6">
+                    <p class="text-center text-lg mb-4">Q(s, a) ← Q(s, a) + α[r + γ max Q(s', a') - Q(s, a)]</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-purple-300 mb-2">α (alpha)</p>
+                        <p class="text-sm text-slate-400">Learning rate, kontrol update speed</p>
+                        <p class="text-xs text-slate-500 mt-2">Typical: 0.1 - 0.5</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-purple-300 mb-2">Temporal Difference</p>
+                        <p class="text-sm text-slate-400">r + γ max Q(s', a') - Q(s, a)</p>
+                        <p class="text-xs text-slate-500 mt-2">Prediction error</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <p class="font-semibold text-purple-300 mb-2">ε-Greedy</p>
+                        <p class="text-sm text-slate-400">Dengan prob ε: random action, else: best action</p>
+                        <p class="text-xs text-slate-500 mt-2">Exploration vs Exploitation</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q-Table Visualization -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-green-400">Q-Table (5x5 Grid Example)</h3>
+                <p class="text-sm text-slate-400 mb-4">Contoh: 5 state, 4 actions per state</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/50">
+                                <th class="border border-slate-700 px-3 py-2 text-blue-400">State</th>
+                                <th class="border border-slate-700 px-3 py-2 text-green-400">Up</th>
+                                <th class="border border-slate-700 px-3 py-2 text-green-400">Down</th>
+                                <th class="border border-slate-700 px-3 py-2 text-green-400">Left</th>
+                                <th class="border border-slate-700 px-3 py-2 text-green-400">Right</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-slate-700 px-3 py-2 bg-blue-500/10">s₀</td>
+                                <td class="border border-slate-700 px-3 py-2">0.45</td>
+                                <td class="border border-slate-700 px-3 py-2">-0.12</td>
+                                <td class="border border-slate-700 px-3 py-2">0.23</td>
+                                <td class="border border-slate-700 px-3 py-2 bg-green-500/20 font-bold">0.87</td>
+                            </tr>
+                            <tr class="bg-slate-900/30">
+                                <td class="border border-slate-700 px-3 py-2 bg-blue-500/10">s₁</td>
+                                <td class="border border-slate-700 px-3 py-2">-0.34</td>
+                                <td class="border border-slate-700 px-3 py-2 bg-green-500/20 font-bold">0.92</td>
+                                <td class="border border-slate-700 px-3 py-2">0.12</td>
+                                <td class="border border-slate-700 px-3 py-2">0.34</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700 px-3 py-2 bg-blue-500/10">s₂</td>
+                                <td class="border border-slate-700 px-3 py-2 bg-green-500/20 font-bold">0.78</td>
+                                <td class="border border-slate-700 px-3 py-2">-0.05</td>
+                                <td class="border border-slate-700 px-3 py-2">0.11</td>
+                                <td class="border border-slate-700 px-3 py-2">0.56</td>
+                            </tr>
+                            <tr class="bg-slate-900/30">
+                                <td class="border border-slate-700 px-3 py-2 bg-blue-500/10">s₃</td>
+                                <td class="border border-slate-700 px-3 py-2">0.25</td>
+                                <td class="border border-slate-700 px-3 py-2">0.38</td>
+                                <td class="border border-slate-700 px-3 py-2 bg-green-500/20 font-bold">0.81</td>
+                                <td class="border border-slate-700 px-3 py-2">0.19</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700 px-3 py-2 bg-blue-500/10">s₄</td>
+                                <td class="border border-slate-700 px-3 py-2">0.67</td>
+                                <td class="border border-slate-700 px-3 py-2">0.42</td>
+                                <td class="border border-slate-700 px-3 py-2">-0.18</td>
+                                <td class="border border-slate-700 px-3 py-2 bg-green-500/20 font-bold">0.95</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-slate-400 mt-4">Higher Q-values (hijau) = lebih valuable actions. Agent akan memilih action dengan Q-value tertinggi.</p>
+            </div>
+
+            <!-- Algorithm Pseudocode -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-cyan-400">Pseudocode</h3>
+                <div class="code-block">
+Initialize Q(s, a) = 0 for all s, a
+
+For episode = 1 to max_episodes:
+    Initialize state s
+
+    For step = 1 to max_steps:
+        With probability ε:
+            a = random action
+        Else:
+            a = argmax Q(s, a)
+
+        Execute a, observe r, s'
+
+        Q(s, a) = Q(s, a) + α[r + γ max Q(s', a') - Q(s, a)]
+
+        s = s'
+
+        if s is terminal:
+            break
+
+Return optimal policy from Q-table
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section id="visualization" class="hidden space-y-8 slide-in">
+            <h2 class="text-3xl font-bold gradient-text">Training & Policy Visualization</h2>
+
+            <!-- Episode Reward Chart -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-blue-400">Episode Reward Progress</h3>
+                <div class="chart-placeholder">
+                    📊 Reward per Episode Chart
+                    <br>
+                    <span class="text-xs">Improvement dari episode awal hingga konvergen</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-4">Grafik menunjukkan peningkatan reward seiring training. Agent belajar menemukan path optimal lebih cepat seiring waktu.</p>
+            </div>
+
+            <!-- Epsilon Decay -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-purple-400">Epsilon Decay (Exploration Decay)</h3>
+                <p class="text-sm text-slate-400 mb-6">Mengurangi eksplorasi seiring training untuk fokus pada eksploitasi strategi terbaik</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <p class="font-semibold text-slate-100 mb-4">Early Episodes (High ε)</p>
+                        <p class="text-3xl font-bold text-yellow-400 text-center">0.9</p>
+                        <p class="text-sm text-slate-400 text-center mt-3">Banyak eksplorasi random actions</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <p class="font-semibold text-slate-100 mb-4">Mid Training (Medium ε)</p>
+                        <p class="text-3xl font-bold text-orange-400 text-center">0.5</p>
+                        <p class="text-sm text-slate-400 text-center mt-3">Balance eksplorasi & eksploitasi</p>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <p class="font-semibold text-slate-100 mb-4">Late Episodes (Low ε)</p>
+                        <p class="text-3xl font-bold text-green-400 text-center">0.1</p>
+                        <p class="text-sm text-slate-400 text-center mt-3">Fokus eksploitasi best policy</p>
+                    </div>
+                </div>
+
+                <div class="code-block mt-6">
+epsilon = initial_epsilon
+for episode in range(num_episodes):
+    epsilon *= epsilon_decay  # Contoh: 0.995
+    # Gunakan epsilon untuk ε-greedy action selection
+                </div>
+            </div>
+
+            <!-- Policy Visualization -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-green-400">Learned Policy (Grid World)</h3>
+                <p class="text-sm text-slate-400 mb-6">Arah panah menunjukkan action optimal untuk setiap state</p>
+
+                <div class="grid grid-cols-5 gap-2 mb-6">
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-red-500 rounded-lg text-xl">
+                        🚫
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↙
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-red-500 rounded-lg text-xl">
+                        🚫
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-red-500 rounded-lg text-xl">
+                        🚫
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-red-500 rounded-lg text-xl">
+                        🚫
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        →
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-slate-900/50 border border-slate-700 rounded-lg text-xl">
+                        ↓
+                    </div>
+                    <div class="aspect-square flex flex-col items-center justify-center bg-green-500/20 border border-green-500 rounded-lg text-xl font-bold">
+                        🎯
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-400">Policy yang dipelajari: Agent bergerak menuju goal sambil menghindari obstacle</p>
+            </div>
+
+            <!-- Learning Parameters -->
+            <div class="glassmorphism-light rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-6 text-pink-400">Hyperparameter Impact</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <h4 class="font-semibold text-blue-300 mb-3">Learning Rate (α)</h4>
+                        <ul class="text-sm text-slate-400 space-y-2">
+                            <li><span class="text-yellow-400">α = 0.01</span> - Belajar lambat, stabil</li>
+                            <li><span class="text-green-400">α = 0.1</span> - Balance (recommended)</li>
+                            <li><span class="text-red-400">α = 0.9</span> - Belajar cepat, unstable</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <h4 class="font-semibold text-blue-300 mb-3">Discount Factor (γ)</h4>
+                        <ul class="text-sm text-slate-400 space-y-2">
+                            <li><span class="text-yellow-400">γ = 0.1</span> - Myopic, fokus immediate reward</li>
+                            <li><span class="text-green-400">γ = 0.9</span> - Farsighted (recommended)</li>
+                            <li><span class="text-red-400">γ = 0.99</span> - Very long-term planning</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <h4 class="font-semibold text-purple-300 mb-3">Initial ε (Exploration)</h4>
+                        <ul class="text-sm text-slate-400 space-y-2">
+                            <li><span class="text-yellow-400">ε = 0.1</span> - Sedikit eksplorasi</li>
+                            <li><span class="text-green-400">ε = 0.5</span> - Balanced exploration</li>
+                            <li><span class="text-red-400">ε = 0.9</span> - Banyak eksplorasi</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <h4 class="font-semibold text-purple-300 mb-3">Decay Rate (ε decay)</h4>
+                        <ul class="text-sm text-slate-400 space-y-2">
+                            <li><span class="text-yellow-400">decay = 0.99</span> - Slow decay</li>
+                            <li><span class="text-green-400">decay = 0.995</span> - Medium decay</li>
+                            <li><span class="text-red-400">decay = 0.9</span> - Fast decay</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 mt-16 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center text-slate-400 text-sm">
+            <p>Q-Learn Visual • Platform Pembelajaran Reinforcement Learning</p>
+            <p class="mt-2">Belajar optimal policy melalui trial and error 🎯</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Show target section
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Smooth scroll
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

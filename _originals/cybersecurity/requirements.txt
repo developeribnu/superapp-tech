@@ -1,0 +1,26 @@
+# Cybersec Knowledge Base - Production Dependencies
+
+# Web framework
+fastapi==0.109.2
+starlette==0.36.3
+pydantic==2.6.1
+pydantic-settings==2.1.0
+
+# Server
+uvicorn==0.27.1
+
+# HTTP client
+httpx==0.26.0
+
+# Cryptography
+cryptography==42.0.2
+bcrypt==4.1.2
+
+# RSS feed parser
+feedparser==6.0.11
+
+# Configuration
+python-dotenv==1.0.1
+
+# Structured logging
+structlog==24.1.0

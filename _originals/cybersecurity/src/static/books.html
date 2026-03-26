@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cybersec Library</title>
+    <meta
+      name="description"
+      content="Curated cybersecurity library with searchable books, tracks, and API tie-ins."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/library.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="/books" aria-label="Cybersec Library home">
+          <span class="brand-mark">CX</span>
+          <span class="brand-copy">
+            <span class="brand-kicker">Cybersec Knowledge Base</span>
+            <span class="brand-title">Library</span>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/docs">API Docs</a>
+          <a href="/api/v1/knowledge/owasp">Knowledge</a>
+          <a href="/api/v1/threat-intel/news">Threat Intel</a>
+          <a class="is-active" href="/books">Library</a>
+        </nav>
+
+        <a class="site-cta" href="/api/v1/library/books">Catalog API</a>
+      </header>
+
+      <main class="page-main">
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Curated Security Shelf</p>
+            <h1>Library page with the same catalog feel as the reference, adapted for cybersecurity.</h1>
+            <p class="hero-text">
+              Search by track, filter by level, and open each title for a sharper summary plus a
+              matching endpoint inside this platform.
+            </p>
+            <div class="hero-actions">
+              <a class="primary-link" href="#catalog">Browse collection</a>
+              <a class="secondary-link" href="/docs">Open API docs</a>
+            </div>
+          </div>
+
+          <div class="hero-metrics" id="hero-metrics">
+            <article class="metric-card">
+              <span class="metric-label">Loading</span>
+              <strong>Catalog</strong>
+              <p>Preparing the shelf...</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="control-panel" id="catalog" aria-labelledby="catalog-heading">
+          <div class="panel-head">
+            <div>
+              <p class="section-label">Searchable Collection</p>
+              <h2 id="catalog-heading">Books by domain, difficulty, and practice track</h2>
+            </div>
+            <p class="panel-caption">
+              Cards are API-backed, filterable, and optimized for desktop and mobile.
+            </p>
+          </div>
+
+          <div class="toolbar">
+            <label class="search-field">
+              <span class="input-label">Search</span>
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Title, author, tag, or domain"
+                autocomplete="off"
+              />
+            </label>
+
+            <label class="level-field">
+              <span class="input-label">Level</span>
+              <select id="level-filter" aria-label="Filter by level">
+                <option value="All levels">All levels</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="category-filters" id="category-filters" aria-label="Category filters"></div>
+
+          <div class="results-row">
+            <p id="results-copy">Loading catalog...</p>
+            <button id="clear-filters" class="ghost-button" type="button" hidden>
+              Reset filters
+            </button>
+          </div>
+
+          <div class="books-grid" id="books-grid" aria-live="polite"></div>
+
+          <noscript>
+            <p class="noscript-note">
+              This page needs JavaScript to load the catalog from
+              <code>/api/v1/library/books</code>.
+            </p>
+          </noscript>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="book-modal" class="book-modal">
+      <div class="modal-shell">
+        <button class="modal-close" id="close-modal" type="button" aria-label="Close details">
+          Close
+        </button>
+        <div id="modal-content"></div>
+      </div>
+    </dialog>
+
+    <script type="module" src="/static/library.js"></script>
+  </body>
+</html>

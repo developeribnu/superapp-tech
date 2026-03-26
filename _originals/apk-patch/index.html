@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Patcher - Tool Signing & Patching Android</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background-attachment: fixed;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .glass-light {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(148, 163, 184, 0.05);
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .animate-slide-in {
+            animation: slide-in 0.6s ease-out;
+        }
+
+        .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #f97316;
+            color: #f97316;
+        }
+
+        .tab-inactive {
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+        }
+
+        .upload-zone {
+            border: 2px dashed rgba(249, 115, 22, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(249, 115, 22, 0.05);
+        }
+
+        .upload-zone:hover {
+            border-color: rgba(249, 115, 22, 0.6);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .upload-zone.drag-over {
+            border-color: #f97316;
+            background: rgba(249, 115, 22, 0.15);
+        }
+
+        .step-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-left: 4px solid #f97316;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+        }
+
+        .info-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: rgba(249, 115, 22, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .permission-badge {
+            display: inline-block;
+            background: rgba(249, 115, 22, 0.2);
+            color: #fed7aa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .verification-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-left: 3px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .verification-item.verified {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .verification-item.error {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            color: #fed7aa;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fed7aa;
+            border: 1px solid rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(249, 115, 22, 0.3);
+        }
+
+        .section {
+            animation: slide-in 0.6s ease-out;
+        }
+
+        .history-item {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-pending {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="glass sticky top-0 z-50 border-b border-slate-700">
+            <div class="max-w-7xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">A</span>
+                        </div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">APK Patcher</h1>
+                    </div>
+                    <p class="text-slate-400 text-sm">Tool Signing & Patching Android APK</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="glass border-b border-slate-700">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex gap-8 overflow-x-auto">
+                    <button onclick="switchTab('dashboard')" class="py-4 px-2 tab-active whitespace-nowrap" id="tab-dashboard">Dashboard</button>
+                    <button onclick="switchTab('upload')" class="py-4 px-2 tab-inactive whitespace-nowrap" id="tab-upload">Upload APK</button>
+                    <button onclick="switchTab('signing')" class="py-4 px-2 tab-inactive whitespace-nowrap" id="tab-signing">Sign APK</button>
+                    <button onclick="switchTab('patch')" class="py-4 px-2 tab-inactive whitespace-nowrap" id="tab-patch">Patch & Modify</button>
+                    <button onclick="switchTab('verify')" class="py-4 px-2 tab-inactive whitespace-nowrap" id="tab-verify">Verifikasi</button>
+                    <button onclick="switchTab('history')" class="py-4 px-2 tab-inactive whitespace-nowrap" id="tab-history">History</button>
+                    <button onclick="switchTab('guide')" class="py-4 px-2 tab-inactive whitespace-nowrap" id="tab-guide">Guide</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-6 py-8">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="section">
+                <h2 class="text-3xl font-bold mb-8">Dashboard APK Patcher</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-light rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-slate-300 font-medium text-sm">APK Diproses</h3>
+                            <span class="text-2xl">📦</span>
+                        </div>
+                        <p class="text-3xl font-bold text-orange-400">156</p>
+                        <p class="text-slate-400 text-xs mt-2">Total APK dalam sesi</p>
+                    </div>
+
+                    <div class="glass-light rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-slate-300 font-medium text-sm">Berhasil Ditandatangani</h3>
+                            <span class="text-2xl">✓</span>
+                        </div>
+                        <p class="text-3xl font-bold text-green-400">148</p>
+                        <p class="text-slate-400 text-xs mt-2">APK dengan signature valid</p>
+                    </div>
+
+                    <div class="glass-light rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-slate-300 font-medium text-sm">Di-Patch</h3>
+                            <span class="text-2xl">🔧</span>
+                        </div>
+                        <p class="text-3xl font-bold text-blue-400">42</p>
+                        <p class="text-slate-400 text-xs mt-2">APK yang dimodifikasi</p>
+                    </div>
+
+                    <div class="glass-light rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-slate-300 font-medium text-sm">Keystore Aktif</h3>
+                            <span class="text-2xl">🔑</span>
+                        </div>
+                        <p class="text-3xl font-bold text-purple-400">8</p>
+                        <p class="text-slate-400 text-xs mt-2">Keystore tersimpan</p>
+                    </div>
+                </div>
+
+                <div class="glass rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">Quick Stats</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-slate-300 mb-3">Ukuran Total Diproses</p>
+                            <p class="text-4xl font-bold text-orange-400 mb-3">2.4 GB</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%;"></div>
+                            </div>
+                            <p class="text-slate-400 text-xs mt-2">Dari 4 GB quota</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-300 mb-3">Success Rate</p>
+                            <p class="text-4xl font-bold text-green-400 mb-3">94.9%</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-gradient-to-r from-green-500 to-green-600" style="width: 94.9%;"></div>
+                            </div>
+                            <p class="text-slate-400 text-xs mt-2">148 dari 156 berhasil</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass rounded-xl p-8">
+                        <h3 class="text-2xl font-bold mb-6">APK Terbaru Diproses</h3>
+                        <div class="space-y-3">
+                            <div class="history-item">
+                                <div>
+                                    <p class="font-semibold text-sm">MyApp-v2.1.5.apk</p>
+                                    <p class="text-slate-400 text-xs mt-1">2.5 MB</p>
+                                </div>
+                                <span class="status-badge status-success">Signed</span>
+                            </div>
+                            <div class="history-item">
+                                <div>
+                                    <p class="font-semibold text-sm">Game-Release-v1.0.apk</p>
+                                    <p class="text-slate-400 text-xs mt-1">85 MB</p>
+                                </div>
+                                <span class="status-badge status-success">Patched</span>
+                            </div>
+                            <div class="history-item">
+                                <div>
+                                    <p class="font-semibold text-sm">Beta-Build-v3.0.apk</p>
+                                    <p class="text-slate-400 text-xs mt-1">12 MB</p>
+                                </div>
+                                <span class="status-badge status-success">Verified</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-xl p-8">
+                        <h3 class="text-2xl font-bold mb-6">Keystore Tersimpan</h3>
+                        <div class="space-y-3">
+                            <div class="info-card">
+                                <p class="font-semibold text-sm">production.keystore</p>
+                                <p class="text-slate-400 text-xs mt-2">
+                                    Alias: prod-key • Created: 2024-05-15 • Valid hingga 2034
+                                </p>
+                            </div>
+                            <div class="info-card">
+                                <p class="font-semibold text-sm">development.keystore</p>
+                                <p class="text-slate-400 text-xs mt-2">
+                                    Alias: dev-key • Created: 2023-12-20 • Valid hingga 2033
+                                </p>
+                            </div>
+                            <div class="info-card">
+                                <p class="font-semibold text-sm">testing.keystore</p>
+                                <p class="text-slate-400 text-xs mt-2">
+                                    Alias: test-key • Created: 2024-01-10 • Valid hingga 2034
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Tab -->
+            <div id="upload" class="section hidden">
+                <h2 class="text-3xl font-bold mb-8">Upload APK</h2>
+
+                <div class="glass rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">Unggah File APK</h3>
+
+                    <div class="upload-zone" id="uploadZone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                        <p class="text-4xl mb-4">📱</p>
+                        <p class="text-xl font-semibold mb-2">Drag & Drop APK File Di Sini</p>
+                        <p class="text-slate-400 mb-4">atau klik untuk memilih dari komputer Anda</p>
+                        <p class="text-slate-500 text-sm">Ukuran maksimal: 500 MB • Format: .apk</p>
+                    </div>
+
+                    <div class="mt-6">
+                        <p class="text-slate-300 font-semibold mb-4">Atau pilih dari recent files:</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 p-3 bg-slate-900/30 rounded-lg cursor-pointer hover:bg-slate-900/50">
+                                <span class="text-2xl">📦</span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm">MyApp-v2.0.apk</p>
+                                    <p class="text-slate-400 text-xs">2.3 MB • Uploaded 2 days ago</p>
+                                </div>
+                                <button class="btn btn-secondary text-sm">Upload Ulang</button>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-900/30 rounded-lg cursor-pointer hover:bg-slate-900/50">
+                                <span class="text-2xl">🎮</span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm">Game-v1.5.apk</p>
+                                    <p class="text-slate-400 text-xs">78 MB • Uploaded 1 week ago</p>
+                                </div>
+                                <button class="btn btn-secondary text-sm">Upload Ulang</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signing Tab -->
+            <div id="signing" class="section hidden">
+                <h2 class="text-3xl font-bold mb-8">Sign APK</h2>
+
+                <div class="glass rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">Proses Penandatanganan APK</h3>
+
+                    <div class="space-y-6">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <p class="font-bold mb-2">Pilih Keystore</p>
+                            <select class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100 mb-3">
+                                <option>production.keystore</option>
+                                <option>development.keystore</option>
+                                <option>testing.keystore</option>
+                            </select>
+                            <p class="text-slate-400 text-sm">Keystore berisi kunci privat untuk signing</p>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <p class="font-bold mb-2">Masukkan Password Keystore</p>
+                            <input type="password" placeholder="Password keystore..." class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100 mb-3">
+                            <p class="text-slate-400 text-sm">Password diperlukan untuk akses kunci</p>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <p class="font-bold mb-2">Pilih Key Alias & Password</p>
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <select class="bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100">
+                                    <option>prod-key</option>
+                                    <option>alternative-key</option>
+                                </select>
+                                <input type="password" placeholder="Key password..." class="bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100">
+                            </div>
+                            <p class="text-slate-400 text-sm">Alias adalah label untuk key, password untuk akses key</p>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <p class="font-bold mb-2">Konfigurasi Signing</p>
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <div>
+                                    <label class="text-slate-400 text-sm">V1 Signing (JAR)</label>
+                                    <input type="checkbox" checked class="mt-2">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-sm">V2 Signing (APK)</label>
+                                    <input type="checkbox" checked class="mt-2">
+                                </div>
+                            </div>
+                            <p class="text-slate-400 text-sm">Pilih metode signing: V1 untuk kompatibilitas, V2 untuk keamanan</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-4">
+                        <button class="btn btn-primary">🔐 Sign APK Sekarang</button>
+                        <button class="btn btn-secondary">📋 Reset Form</button>
+                    </div>
+                </div>
+
+                <div class="glass rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Opsi Signing Lanjutan</h3>
+                    <div class="space-y-4">
+                        <div class="info-card">
+                            <p class="font-semibold text-sm mb-2">Certificate Information</p>
+                            <p class="text-slate-400 text-xs">CN=com.example.app, O=Example Corp, C=ID</p>
+                            <p class="text-slate-400 text-xs mt-2">Valid from 2024-05-15 to 2034-05-12</p>
+                        </div>
+                        <div class="info-card">
+                            <p class="font-semibold text-sm mb-2">Signing Algorithm</p>
+                            <p class="text-slate-400 text-xs">SHA-256 with RSA 2048-bit</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patch Tab -->
+            <div id="patch" class="section hidden">
+                <h2 class="text-3xl font-bold mb-8">Patch & Modifikasi APK</h2>
+
+                <div class="glass rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">Opsi Patching</h3>
+
+                    <div class="space-y-6">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <p class="font-bold mb-4">Pilih File APK untuk Di-Patch</p>
+                            <div class="bg-slate-900/30 rounded-lg p-4 border border-slate-700">
+                                <p class="font-semibold text-sm mb-2">Current APK: MyApp-v2.1.5.apk</p>
+                                <p class="text-slate-400 text-xs">Size: 2.5 MB • Package: com.myapp.android</p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <p class="font-bold mb-4">Pilih Opsi Patching</p>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 p-3 bg-slate-900/30 rounded-lg cursor-pointer">
+                                    <input type="checkbox" checked>
+                                    <div>
+                                        <p class="font-medium text-sm">Remove Debuggable Flag</p>
+                                        <p class="text-slate-400 text-xs">Hapus debug mode dari manifest</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 bg-slate-900/30 rounded-lg cursor-pointer">
+                                    <input type="checkbox">
+                                    <div>
+                                        <p class="font-medium text-sm">Remove Permission</p>
+                                        <p class="text-slate-400 text-xs">Hapus permission tertentu</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 bg-slate-900/30 rounded-lg cursor-pointer">
+                                    <input type="checkbox">
+                                    <div>
+                                        <p class="font-medium text-sm">Rename Package</p>
+                                        <p class="text-slate-400 text-xs">Ubah package name aplikasi</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 bg-slate-900/30 rounded-lg cursor-pointer">
+                                    <input type="checkbox">
+                                    <div>
+                                        <p class="font-medium text-sm">Modify Resources</p>
+                                        <p class="text-slate-400 text-xs">Ubah resources (strings, icons, dll)</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <p class="font-bold mb-4">Konfigurasi Patch</p>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-slate-400 text-sm block mb-2">Package Name Baru</label>
+                                    <input type="text" placeholder="com.example.newname" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-sm block mb-2">Version Code</label>
+                                    <input type="number" value="5" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-sm block mb-2">Version Name</label>
+                                    <input type="text" value="2.1.5" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-slate-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-4">
+                        <button class="btn btn-primary">🔧 Mulai Patching</button>
+                        <button class="btn btn-secondary">📋 Reset Opsi</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verify Tab -->
+            <div id="verify" class="section hidden">
+                <h2 class="text-3xl font-bold mb-8">Verifikasi APK</h2>
+
+                <div class="glass rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">Hasil Verifikasi</h3>
+
+                    <div class="space-y-3 mb-8">
+                        <div class="verification-item verified">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-sm">✓ Signature Valid</p>
+                                <span class="text-slate-400 text-xs">SHA-256 with RSA 2048</span>
+                            </div>
+                        </div>
+
+                        <div class="verification-item verified">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-sm">✓ Certificate Valid</p>
+                                <span class="text-slate-400 text-xs">Expires: 2034-05-12</span>
+                            </div>
+                        </div>
+
+                        <div class="verification-item verified">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-sm">✓ Manifest Valid</p>
+                                <span class="text-slate-400 text-xs">Package: com.myapp.android</span>
+                            </div>
+                        </div>
+
+                        <div class="verification-item verified">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-sm">✓ No Security Issues</p>
+                                <span class="text-slate-400 text-xs">Debuggable: false</span>
+                            </div>
+                        </div>
+
+                        <div class="verification-item verified">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-sm">✓ File Integrity</p>
+                                <span class="text-slate-400 text-xs">Size: 2.5 MB • CRC32: a1b2c3d4</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/30 rounded-lg p-6 mb-8">
+                        <h4 class="font-bold mb-4">Checklist Verifikasi</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>APK format valid</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Semua file terkompresi dengan baik</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Manifest XML well-formed</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Semua DEX files valid</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Resources valid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">APK Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">Package Name</p>
+                            <p class="font-mono text-sm bg-slate-900/30 p-2 rounded">com.myapp.android</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">Version</p>
+                            <p class="font-mono text-sm bg-slate-900/30 p-2 rounded">2.1.5 (Build 5)</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">Min SDK</p>
+                            <p class="font-mono text-sm bg-slate-900/30 p-2 rounded">API 24 (Android 7.0)</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">Target SDK</p>
+                            <p class="font-mono text-sm bg-slate-900/30 p-2 rounded">API 34 (Android 14)</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold mt-8 mb-4">Permissions</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="permission-badge">android.permission.INTERNET</span>
+                        <span class="permission-badge">android.permission.ACCESS_NETWORK_STATE</span>
+                        <span class="permission-badge">android.permission.CAMERA</span>
+                        <span class="permission-badge">android.permission.ACCESS_FINE_LOCATION</span>
+                        <span class="permission-badge">android.permission.READ_EXTERNAL_STORAGE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history" class="section hidden">
+                <h2 class="text-3xl font-bold mb-8">History Pemrosesan</h2>
+
+                <div class="glass rounded-xl p-8">
+                    <div class="space-y-3">
+                        <div class="history-item">
+                            <div class="flex-1">
+                                <p class="font-semibold">MyApp-v2.1.5.apk</p>
+                                <p class="text-slate-400 text-xs mt-1">Signed with production.keystore</p>
+                                <p class="text-slate-500 text-xs mt-1">2 hours ago</p>
+                            </div>
+                            <span class="status-badge status-success">Signed</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="flex-1">
+                                <p class="font-semibold">Game-Release-v1.0.apk</p>
+                                <p class="text-slate-400 text-xs mt-1">Patched & Signed</p>
+                                <p class="text-slate-500 text-xs mt-1">1 day ago</p>
+                            </div>
+                            <span class="status-badge status-success">Patched</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="flex-1">
+                                <p class="font-semibold">Beta-Build-v3.0.apk</p>
+                                <p class="text-slate-400 text-xs mt-1">Verified & Analyzed</p>
+                                <p class="text-slate-500 text-xs mt-1">3 days ago</p>
+                            </div>
+                            <span class="status-badge status-success">Verified</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="flex-1">
+                                <p class="font-semibold">OldApp-v1.5.apk</p>
+                                <p class="text-slate-400 text-xs mt-1">Failed signature verification</p>
+                                <p class="text-slate-500 text-xs mt-1">1 week ago</p>
+                            </div>
+                            <span class="status-badge status-error">Failed</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="flex-1">
+                                <p class="font-semibold">TestApp-v2.0.apk</p>
+                                <p class="text-slate-400 text-xs mt-1">Signed with development.keystore</p>
+                                <p class="text-slate-500 text-xs mt-1">2 weeks ago</p>
+                            </div>
+                            <span class="status-badge status-success">Signed</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="flex-1">
+                                <p class="font-semibold">DevBuild-v5.1.apk</p>
+                                <p class="text-slate-400 text-xs mt-1">Patching in progress...</p>
+                                <p class="text-slate-500 text-xs mt-1">pending</p>
+                            </div>
+                            <span class="status-badge status-pending">Processing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guide Tab -->
+            <div id="guide" class="section hidden">
+                <h2 class="text-3xl font-bold mb-8">Guide & Referensi</h2>
+
+                <div class="glass rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">Command Reference</h3>
+
+                    <h4 class="font-bold text-orange-400 mb-4">uber-apk-signer</h4>
+                    <p class="text-slate-400 text-sm mb-4">Tool untuk signing APK dengan mudah:</p>
+
+                    <div class="code-block">
+java -jar uber-apk-signer.jar --apks myapp.apk \
+  --ks keystore.p12 \
+  --ks-pass yourpassword \
+  --ks-key-alias keyalias \
+  --key-pass keypassword
+                    </div>
+
+                    <h4 class="font-bold text-orange-400 mb-4 mt-6">jarsigner (Built-in Java)</h4>
+                    <p class="text-slate-400 text-sm mb-4">Tool bawaan Java untuk signing:</p>
+
+                    <div class="code-block">
+jarsigner -verbose -sigalg SHA256withRSA \
+  -digestalg SHA-256 \
+  -keystore keystore.jks \
+  -storepass yourpassword \
+  app-unsigned.apk alias_name
+                    </div>
+
+                    <h4 class="font-bold text-orange-400 mb-4 mt-6">zipalign (Android SDK)</h4>
+                    <p class="text-slate-400 text-sm mb-4">Optimize APK sebelum release:</p>
+
+                    <div class="code-block">
+zipalign -v 4 app-unsigned.apk app-aligned.apk
+                    </div>
+
+                    <h4 class="font-bold text-orange-400 mb-4 mt-6">apksigner (Android SDK)</h4>
+                    <p class="text-slate-400 text-sm mb-4">Verifikasi signature APK:</p>
+
+                    <div class="code-block">
+apksigner verify --verbose app.apk
+                    </div>
+                </div>
+
+                <div class="glass rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Best Practices</h3>
+                    <div class="space-y-4">
+                        <div class="info-card">
+                            <p class="font-bold text-sm mb-2">🔐 Keystore Security</p>
+                            <p class="text-slate-400 text-xs">
+                                Simpan keystore di tempat aman, gunakan password yang kuat, dan jangan bagikan keystore
+                                dengan siapa pun. Keystore adalah kunci untuk update aplikasi Anda.
+                            </p>
+                        </div>
+                        <div class="info-card">
+                            <p class="font-bold text-sm mb-2">📱 Compatibility</p>
+                            <p class="text-slate-400 text-xs">
+                                Gunakan V1 dan V2 signing untuk kompatibilitas maksimal. V1 untuk Android 6.0 ke bawah,
+                                V2 untuk Android 7.0 ke atas.
+                            </p>
+                        </div>
+                        <div class="info-card">
+                            <p class="font-bold text-sm mb-2">✅ Verification</p>
+                            <p class="text-slate-400 text-xs">
+                                Selalu verifikasi APK sebelum release ke production. Pastikan signature dan manifest
+                                valid menggunakan tools yang tersedia.
+                            </p>
+                        </div>
+                        <div class="info-card">
+                            <p class="font-bold text-sm mb-2">🔄 Version Management</p>
+                            <p class="text-slate-400 text-xs">
+                                Kelola version code dan name dengan hati-hati. Version code harus increment untuk setiap
+                                update, version name untuk user readability.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="glass border-t border-slate-700 mt-16">
+            <div class="max-w-7xl mx-auto px-6 py-8">
+                <p class="text-slate-400 text-sm text-center">
+                    APK Patcher • Tool Signing & Patching Android • 2026
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('[id^="dashboard"], [id^="upload"], [id^="signing"], [id^="patch"], [id^="verify"], [id^="history"], [id^="guide"]').forEach(el => {
+                if (el.id === tabName) return;
+                if (['dashboard', 'upload', 'signing', 'patch', 'verify', 'history', 'guide'].includes(el.id)) {
+                    el.classList.add('hidden');
+                }
+            });
+
+            document.getElementById(tabName).classList.remove('hidden');
+
+            document.querySelectorAll('[id^="tab-"]').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            document.getElementById('tab-' + tabName).classList.add('tab-active');
+            document.getElementById('tab-' + tabName).classList.remove('tab-inactive');
+        }
+
+        const uploadZone = document.getElementById('uploadZone');
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            uploadZone.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            console.log('Files dropped:', e.dataTransfer.files);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /*.json$
+Disallow: /.git/
+Disallow: /private/
+
+Sitemap: https://infrahub.example.com/sitemap.xml

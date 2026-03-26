@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM AI Studio - Hub Pengembangan Model Bahasa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+        }
+
+        .glass-hover:hover {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(148, 163, 184, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .nav-active {
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 3px solid #06b6d4;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
+            transition: all 0.3s ease;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .table-row {
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .table-row:hover {
+            background: rgba(6, 182, 212, 0.05);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
+            border-radius: 10px;
+            height: 8px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(6, 182, 212, 0.2);
+        }
+
+        .input-glass {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: #e2e8f0;
+        }
+
+        .input-glass:focus {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #06b6d4;
+            outline: none;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
+        }
+
+        .pipeline-step {
+            position: relative;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .pipeline-step::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #06b6d4;
+        }
+
+        .pipeline-step:last-child::after {
+            display: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .badge-warning {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .badge-info {
+            background: rgba(6, 182, 212, 0.2);
+            color: #67e8f9;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 gradient-text text-2xl font-bold flex items-center justify-center">
+                    ⚙️
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold gradient-text">LLM AI Studio</h1>
+                    <p class="text-xs text-slate-400">Hub Pengembangan Model Bahasa</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                    📚 Dokumentasi
+                </button>
+                <button class="button-primary px-4 py-2 text-white font-semibold rounded-lg">
+                    + Proyek Baru
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 glass glass-hover border-r border-slate-800 min-h-screen sticky top-20 p-6 space-y-2">
+            <nav class="space-y-1">
+                <button class="nav-active w-full text-left px-4 py-3 rounded-lg text-cyan-400 font-medium">
+                    📊 Dashboard
+                </button>
+                <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition text-slate-300">
+                    🤖 Model
+                </button>
+                <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition text-slate-300">
+                    🔧 Fine-tuning
+                </button>
+                <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition text-slate-300">
+                    📈 Evaluasi
+                </button>
+                <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition text-slate-300">
+                    🚀 Deployment
+                </button>
+                <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition text-slate-300">
+                    🔌 API
+                </button>
+                <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition text-slate-300">
+                    📖 Dokumentasi
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 space-y-8">
+            <!-- Welcome Hero -->
+            <div class="glass glow p-8 rounded-2xl border-0 overflow-hidden relative">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500 opacity-10 blur-3xl rounded-full -z-10"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold mb-2">Studio Pengembangan LLM</h2>
+                    <p class="text-slate-400 mb-6">Platform lengkap untuk pelatihan, evaluasi, dan deployment model bahasa besar dengan mudah.</p>
+                    <div class="flex gap-4">
+                        <button class="button-primary px-6 py-3 text-white font-semibold rounded-lg">
+                            Mulai Model Baru
+                        </button>
+                        <button class="px-6 py-3 glass glass-hover rounded-lg font-semibold">
+                            Lihat Template
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-5 gap-4">
+                <div class="stat-box glass p-6 rounded-xl border-0">
+                    <p class="text-slate-400 text-sm mb-2">Total Model</p>
+                    <p class="text-3xl font-bold gradient-text">24</p>
+                    <p class="text-xs text-blue-400 mt-2">+3 minggu ini</p>
+                </div>
+                <div class="stat-box glass p-6 rounded-xl border-0">
+                    <p class="text-slate-400 text-sm mb-2">Model Aktif</p>
+                    <p class="text-3xl font-bold gradient-text">8</p>
+                    <p class="text-xs text-green-400 mt-2">Siap produksi</p>
+                </div>
+                <div class="stat-box glass p-6 rounded-xl border-0">
+                    <p class="text-slate-400 text-sm mb-2">Training Jobs</p>
+                    <p class="text-3xl font-bold gradient-text">5</p>
+                    <p class="text-xs text-cyan-400 mt-2">3 sedang berjalan</p>
+                </div>
+                <div class="stat-box glass p-6 rounded-xl border-0">
+                    <p class="text-slate-400 text-sm mb-2">Komputasi GPU</p>
+                    <p class="text-3xl font-bold gradient-text">128</p>
+                    <p class="text-xs text-purple-400 mt-2">GPU aktif</p>
+                </div>
+                <div class="stat-box glass p-6 rounded-xl border-0">
+                    <p class="text-slate-400 text-sm mb-2">Akurasi Rata-rata</p>
+                    <p class="text-3xl font-bold gradient-text">94.2%</p>
+                    <p class="text-xs text-yellow-400 mt-2">↑ 2.1% bulan lalu</p>
+                </div>
+            </div>
+
+            <!-- Model Comparison Table -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold">🤖 Perbandingan Model</h3>
+                <div class="glass glass-hover rounded-xl border-0 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-slate-700">
+                                    <th class="text-left px-6 py-4 text-sm font-semibold text-slate-300">Nama Model</th>
+                                    <th class="text-left px-6 py-4 text-sm font-semibold text-slate-300">Parameter</th>
+                                    <th class="text-left px-6 py-4 text-sm font-semibold text-slate-300">Akurasi</th>
+                                    <th class="text-left px-6 py-4 text-sm font-semibold text-slate-300">Kecepatan</th>
+                                    <th class="text-left px-6 py-4 text-sm font-semibold text-slate-300">Cost/Token</th>
+                                    <th class="text-left px-6 py-4 text-sm font-semibold text-slate-300">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td class="px-6 py-4"><span class="font-semibold">GPT-4 Turbo</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">1.76T</td>
+                                    <td class="px-6 py-4"><div class="w-24 bg-slate-800 rounded-full h-2"><div class="progress-bar" style="width: 96%"></div></div></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">~1.5s</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-cyan-400">$0.01</td>
+                                    <td class="px-6 py-4"><span class="badge badge-success">Aktif</span></td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td class="px-6 py-4"><span class="font-semibold">Claude 3.5 Sonnet</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">~100B</td>
+                                    <td class="px-6 py-4"><div class="w-24 bg-slate-800 rounded-full h-2"><div class="progress-bar" style="width: 94%"></div></div></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">~1.2s</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-cyan-400">$0.008</td>
+                                    <td class="px-6 py-4"><span class="badge badge-success">Aktif</span></td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td class="px-6 py-4"><span class="font-semibold">Llama 3 70B</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">70B</td>
+                                    <td class="px-6 py-4"><div class="w-24 bg-slate-800 rounded-full h-2"><div class="progress-bar" style="width: 88%"></div></div></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">~2.1s</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-cyan-400">$0.004</td>
+                                    <td class="px-6 py-4"><span class="badge badge-success">Aktif</span></td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td class="px-6 py-4"><span class="font-semibold">Mistral Large</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">123B</td>
+                                    <td class="px-6 py-4"><div class="w-24 bg-slate-800 rounded-full h-2"><div class="progress-bar" style="width: 86%"></div></div></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">~1.8s</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-cyan-400">$0.005</td>
+                                    <td class="px-6 py-4"><span class="badge badge-success">Aktif</span></td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td class="px-6 py-4"><span class="font-semibold">Custom Model v2.1</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">13B</td>
+                                    <td class="px-6 py-4"><div class="w-24 bg-slate-800 rounded-full h-2"><div class="progress-bar" style="width: 78%"></div></div></td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">~0.8s</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-cyan-400">$0.001</td>
+                                    <td class="px-6 py-4"><span class="badge badge-info">Training</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fine-tuning Pipeline -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold">🔧 Pipeline Fine-tuning</h3>
+                <div class="overflow-x-auto pb-4">
+                    <div class="flex gap-4 min-w-max">
+                        <div class="pipeline-step">
+                            <p class="text-sm font-semibold text-cyan-400 mb-2">1. Data Preparation</p>
+                            <p class="text-xs text-slate-400">Siapkan dan validasi dataset pelatihan</p>
+                            <p class="text-xs text-green-400 mt-2">✓ Selesai</p>
+                        </div>
+                        <div class="pipeline-step">
+                            <p class="text-sm font-semibold text-cyan-400 mb-2">2. Model Selection</p>
+                            <p class="text-xs text-slate-400">Pilih model dasar yang sesuai</p>
+                            <p class="text-xs text-green-400 mt-2">✓ Selesai</p>
+                        </div>
+                        <div class="pipeline-step">
+                            <p class="text-sm font-semibold text-cyan-400 mb-2">3. Configuration</p>
+                            <p class="text-xs text-slate-400">Konfigurasi hyperparameter pelatihan</p>
+                            <p class="text-xs text-green-400 mt-2">✓ Selesai</p>
+                        </div>
+                        <div class="pipeline-step">
+                            <p class="text-sm font-semibold text-cyan-400 mb-2">4. Training</p>
+                            <p class="text-xs text-slate-400">Jalankan proses fine-tuning model</p>
+                            <p class="text-xs text-yellow-400 mt-2">⏳ Sedang berjalan (45%)</p>
+                        </div>
+                        <div class="pipeline-step">
+                            <p class="text-sm font-semibold text-cyan-400 mb-2">5. Validation</p>
+                            <p class="text-xs text-slate-400">Validasi hasil pelatihan dengan test set</p>
+                            <p class="text-xs text-slate-500 mt-2">⏸ Menunggu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benchmark Scores -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold">📈 Skor Benchmark</h3>
+                    <div class="glass glass-hover p-6 rounded-xl border-0 space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-semibold">MMLU (Reasoning)</span>
+                                <span class="text-sm font-bold text-cyan-400">92.3%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-2">
+                                <div class="progress-bar" style="width: 92.3%"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-semibold">HumanEval (Code)</span>
+                                <span class="text-sm font-bold text-cyan-400">88.5%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-2">
+                                <div class="progress-bar" style="width: 88.5%"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-semibold">BLEU Score (NMT)</span>
+                                <span class="text-sm font-bold text-cyan-400">95.1%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-2">
+                                <div class="progress-bar" style="width: 95.1%"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-semibold">Perplexity (Validation)</span>
+                                <span class="text-sm font-bold text-cyan-400">1.24</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-2">
+                                <div class="progress-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold">🎯 Metrik Performa</h3>
+                    <div class="glass glass-hover p-6 rounded-xl border-0 space-y-4">
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                            <span class="text-sm text-slate-300">Throughput</span>
+                            <span class="font-semibold text-cyan-400">2,450 tok/s</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                            <span class="text-sm text-slate-300">Latency (p95)</span>
+                            <span class="font-semibold text-cyan-400">1.23ms</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                            <span class="text-sm text-slate-300">Memory Usage</span>
+                            <span class="font-semibold text-yellow-400">32.4 GB / 40 GB</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                            <span class="text-sm text-slate-300">Batch Size</span>
+                            <span class="font-semibold text-cyan-400">512</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-slate-300">Cost/1M tokens</span>
+                            <span class="font-semibold text-green-400">$0.47</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Playground -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold">🔌 API Playground</h3>
+                <div class="glass glass-hover p-6 rounded-xl border-0">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold">Pilih Model</label>
+                            <select class="input-glass w-full px-4 py-2 rounded-lg">
+                                <option>GPT-4 Turbo</option>
+                                <option>Claude 3.5 Sonnet</option>
+                                <option>Llama 3 70B</option>
+                                <option>Custom Model v2.1</option>
+                            </select>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold">Temperature</label>
+                            <input type="range" min="0" max="2" step="0.1" value="0.7" class="w-full">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-semibold mb-2">Prompt</label>
+                        <textarea class="input-glass w-full px-4 py-3 rounded-lg h-24 resize-none" placeholder="Masukkan prompt Anda di sini..."></textarea>
+                    </div>
+                    <button class="button-primary w-full mt-4 py-3 text-white font-semibold rounded-lg">
+                        Jalankan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Deployment Architecture -->
+            <div class="space-y-4 pb-8">
+                <h3 class="text-xl font-bold">🚀 Arsitektur Deployment</h3>
+                <div class="glass glass-hover p-8 rounded-xl border-0">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="text-center p-4 bg-slate-900 rounded-lg">
+                            <p class="text-2xl mb-2">🌐</p>
+                            <p class="text-sm font-semibold">Load Balancer</p>
+                            <p class="text-xs text-slate-400 mt-1">Distribusi traffic</p>
+                        </div>
+                        <div class="text-center p-4 bg-slate-900 rounded-lg">
+                            <p class="text-2xl mb-2">⚙️</p>
+                            <p class="text-sm font-semibold">API Gateway</p>
+                            <p class="text-xs text-slate-400 mt-1">8 instance aktif</p>
+                        </div>
+                        <div class="text-center p-4 bg-slate-900 rounded-lg">
+                            <p class="text-2xl mb-2">🤖</p>
+                            <p class="text-sm font-semibold">Model Servers</p>
+                            <p class="text-xs text-slate-400 mt-1">16 GPU containers</p>
+                        </div>
+                        <div class="text-center p-4 bg-slate-900 rounded-lg">
+                            <p class="text-2xl mb-2">💾</p>
+                            <p class="text-sm font-semibold">Cache Layer</p>
+                            <p class="text-xs text-slate-400 mt-1">Redis cluster</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Progress animation
+        const progressBars = document.querySelectorAll('.progress-bar');
+        progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = width;
+                bar.style.transition = 'width 1.5s ease-out';
+            }, 100);
+        });
+
+        // Range slider feedback
+        const rangeSlider = document.querySelector('input[type="range"]');
+        if (rangeSlider) {
+            rangeSlider.addEventListener('input', function() {
+                this.style.background = `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${this.value * 50}%, rgba(148, 163, 184, 0.1) ${this.value * 50}%, rgba(148, 163, 184, 0.1) 100%)`;
+            });
+        }
+    </script>
+</body>
+</html>

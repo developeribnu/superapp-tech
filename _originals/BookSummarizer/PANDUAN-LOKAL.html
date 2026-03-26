@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Setup — COGNOSCERE BookSummarizer (macOS)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 780px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  h1 { font-size: 2.2rem; color: #f8fafc; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.02em; }
+  .subtitle { color: #94a3b8; font-size: 1.05rem; margin-bottom: 48px; }
+
+  .step { background: #1e293b; border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; border: 1px solid #334155; transition: border-color 0.2s; }
+  .step:hover { border-color: #475569; }
+
+  .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+  .step-num { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.15rem; flex-shrink: 0; }
+  .step-title { font-size: 1.3rem; color: #f1f5f9; font-weight: 600; }
+  .step p { color: #cbd5e1; margin-bottom: 12px; }
+
+  code { background: #0f172a; padding: 2px 8px; border-radius: 6px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.88em; color: #a5f3fc; }
+
+  .code-block {
+    background: #0f172a; border: 1px solid #334155; border-radius: 12px;
+    padding: 18px 22px; font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.88rem; color: #a5f3fc; overflow-x: auto; margin: 14px 0;
+    white-space: pre; line-height: 1.6;
+  }
+
+  .highlight { background: #1e1b4b; border-left: 4px solid #6366f1; padding: 18px 22px; border-radius: 0 12px 12px 0; margin: 16px 0; }
+  .highlight strong { color: #a5b4fc; }
+
+  .warning { background: #422006; border-left: 4px solid #f59e0b; padding: 18px 22px; border-radius: 0 12px 12px 0; margin: 16px 0; }
+  .warning strong { color: #fbbf24; }
+
+  .success { background: #052e16; border-left: 4px solid #22c55e; padding: 18px 22px; border-radius: 0 12px 12px 0; margin: 16px 0; }
+  .success strong { color: #4ade80; }
+
+  a { color: #818cf8; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; }
+  .badge-green { background: #052e16; color: #4ade80; }
+
+  .divider { border: 0; border-top: 1px solid #334155; margin: 40px 0; }
+
+  .launcher-card {
+    background: linear-gradient(135deg, #1e293b, #1e1b4b);
+    border: 2px solid #6366f1; border-radius: 16px; padding: 32px;
+    text-align: center; margin: 20px 0;
+  }
+  .launcher-card .icon { font-size: 3rem; margin-bottom: 12px; }
+  .launcher-card .name { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; }
+  .launcher-card .desc { color: #94a3b8; margin-top: 6px; font-size: 0.95rem; }
+
+  .faq { margin-top: 12px; }
+  .faq-item { border-bottom: 1px solid #334155; padding: 18px 0; }
+  .faq-q { color: #a5b4fc; font-weight: 600; margin-bottom: 8px; font-size: 1.02rem; }
+  .faq-a { color: #94a3b8; }
+
+  .footer { text-align: center; color: #475569; margin-top: 48px; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>COGNOSCERE BookSummarizer</h1>
+<p class="subtitle">Panduan Setup & Testing di macOS</p>
+
+<!-- STEP 1: INSTALL PYTHON -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div class="step-title">Pastikan Python Terinstall</div>
+  </div>
+  <p>BookSummarizer membutuhkan <strong>Python 3.8+</strong>. Cek apakah sudah terinstall — buka <strong>Terminal</strong> (Cmd+Space, ketik "Terminal"), lalu ketik:</p>
+
+  <div class="code-block">python3 --version</div>
+
+  <p>Kalau muncul angka versi (misalnya <code>Python 3.12.4</code>), berarti sudah siap.</p>
+
+  <div class="highlight">
+    <strong>Belum punya Python?</strong><br>
+    <strong>Homebrew (disarankan):</strong> <code>brew install python3</code><br>
+    <strong>Download langsung:</strong> <a href="https://python.org/downloads/macos/" target="_blank">python.org/downloads/macos</a>
+  </div>
+</div>
+
+<!-- STEP 2: JALANKAN APLIKASI -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div class="step-title">Jalankan Aplikasi <span class="badge badge-green">TANPA COMMAND LINE</span></div>
+  </div>
+  <p>Buka folder <strong>BookSummarizer</strong> di Finder, lalu:</p>
+
+  <div class="launcher-card">
+    <div class="icon">🍎</div>
+    <div class="name">start.command</div>
+    <div class="desc">Klik dua kali file ini di Finder</div>
+  </div>
+
+  <div class="warning">
+    <strong>Pertama kali klik:</strong> macOS mungkin menampilkan peringatan keamanan.<br>
+    Solusi: Klik kanan file → <strong>Open</strong> → klik <strong>Open</strong> di dialog konfirmasi.<br>
+    Setelah itu, klik dua kali biasa akan selalu berfungsi.
+  </div>
+
+  <div class="highlight">
+    <strong>Yang terjadi otomatis saat diklik:</strong><br>
+    1. Cek Python → Install dependencies yang belum ada<br>
+    2. Buat file <code>.env</code> kalau belum ada<br>
+    3. Jalankan web server Flask<br>
+    4. Buka Safari/Chrome otomatis ke <code>http://localhost:5000</code>
+  </div>
+</div>
+
+<!-- STEP 3: SETUP DI BROWSER -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div class="step-title">Setup di Browser</div>
+  </div>
+
+  <p><strong style="color: #a5b4fc;">A. Masukkan API Key Kimi</strong></p>
+  <p>Buka halaman <strong>Settings</strong> (ikon gear di sidebar kiri), lalu paste API key kamu.</p>
+  <p>Belum punya? Daftar gratis di <a href="https://kimi.com/code/console" target="_blank">kimi.com/code/console</a> → copy API key.</p>
+
+  <p style="margin-top: 16px;"><strong style="color: #a5b4fc;">B. Pilih Folder Ebook</strong></p>
+  <p>Masih di halaman Settings, ketik path folder yang berisi file-file PDF ebook kamu. Aplikasi akan otomatis scan semua PDF.</p>
+</div>
+
+<!-- STEP 4: MULAI PROSES -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div class="step-title">Mulai Proses Rangkuman</div>
+  </div>
+
+  <p><strong style="color: #a5b4fc;">Library:</strong> Semua ebook PDF muncul sebagai kartu. Centang buku yang mau dirangkum, atau klik <strong>"Process All Pending"</strong> untuk proses semua.</p>
+
+  <p><strong style="color: #a5b4fc;">Queue:</strong> Pantau progress real-time — progress bar, log aktivitas, estimasi waktu. Tombol Cancel tersedia kalau mau berhenti.</p>
+
+  <p><strong style="color: #a5b4fc;">Estimasi:</strong> Sekitar <strong>5–10 menit per buku</strong>. Kimi K2.5 butuh waktu karena menghasilkan review 8.000–15.000+ kata.</p>
+
+  <div class="success">
+    <strong>Setelah selesai:</strong><br>
+    Klik buku di Library → lihat rangkuman langsung di browser → download file DOCX.<br>
+    Semua file tersimpan di folder <code>output/</code> di dalam folder BookSummarizer.
+  </div>
+</div>
+
+<!-- STEP 5: MENGHENTIKAN -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div class="step-title">Menghentikan & Melanjutkan</div>
+  </div>
+
+  <p><strong>Menghentikan:</strong> Tutup jendela Terminal yang terbuka, atau tekan <code>Ctrl+C</code> di Terminal.</p>
+
+  <p><strong>Melanjutkan:</strong> Klik dua kali <code>start.command</code> lagi. Progress tersimpan otomatis — aplikasi akan melanjutkan dari buku terakhir yang belum selesai.</p>
+</div>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<h2 style="font-size: 1.4rem; color: #f1f5f9; margin-bottom: 24px; font-weight: 600;">FAQ</h2>
+
+<div class="faq">
+  <div class="faq-item">
+    <div class="faq-q">Apakah butuh koneksi internet?</div>
+    <div class="faq-a">Ya, koneksi internet diperlukan untuk mengirim teks ke API Kimi. Tapi UI aplikasinya sendiri berjalan lokal (localhost).</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Port 5000 sudah dipakai, bagaimana?</div>
+    <div class="faq-a">Aplikasi otomatis mencari port alternatif (5001, 5002, dst). Tidak perlu konfigurasi manual.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">File .env aman?</div>
+    <div class="faq-a">Ya, file .env berisi API key dan sudah masuk di .gitignore — tidak akan ter-push ke GitHub.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">"start.command" tidak bisa dibuka?</div>
+    <div class="faq-a">Klik kanan → Open → klik Open di dialog. Atau buka Terminal dan jalankan: <code>chmod +x start.command</code> lalu klik dua kali lagi.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Bagaimana update ke versi terbaru?</div>
+    <div class="faq-a">Buka Terminal, masuk ke folder BookSummarizer, lalu jalankan <code>git pull</code>.</div>
+  </div>
+</div>
+
+<div class="footer">
+  COGNOSCERE v2.0 — Comprehensive Knowledge Extraction System<br>
+  Powered by Kimi AI (Moonshot AI) · macOS Edition
+</div>
+
+</div>
+</body>
+</html>

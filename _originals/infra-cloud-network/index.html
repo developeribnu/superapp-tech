@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfraHub Pro - Master Infrastructure, Cloud & DevOps</title>
+    <meta name="description" content="Comprehensive learning platform for Cloud, Kubernetes, DevOps, Linux, Networking & Security. Tutorials, quizzes, hands-on labs and certifications.">
+    <meta name="keywords" content="infrastructure, cloud, DevOps, Kubernetes, AWS, Azure, GCP, Linux, networking, docker, CI/CD, security">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta property="og:title" content="InfraHub Pro - Infrastructure & Cloud Learning Platform">
+    <meta property="og:description" content="Master Cloud, DevOps, Kubernetes, Linux and Security with tutorials, labs and certifications.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="InfraHub Pro">
+    <meta name="twitter:description" content="Complete DevOps and Cloud learning platform">
+    <link rel="canonical" href="https://infrahub.example.com">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128640;</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Initializing InfraHub Pro...</div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">&#128640;</span>
+                <div class="logo-text-wrapper">
+                    <span class="logo-text">InfraHub</span>
+                    <span class="logo-badge">PRO</span>
+                </div>
+            </div>
+            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" id="search-input" placeholder="Search topics, commands..." autocomplete="off">
+            <kbd class="search-kbd">Ctrl+K</kbd>
+        </div>
+
+        <ul class="nav-menu" id="nav-menu">
+            <li class="nav-item active" data-section="dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                <span>Dashboard</span>
+            </li>
+        </ul>
+
+        <div class="nav-section-title">Learn</div>
+        <ul class="nav-menu">
+            <li class="nav-item" data-section="learning-path">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <span>Learning Path</span>
+            </li>
+            <li class="nav-item has-submenu" data-toggle="fundamentals">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m18.8 18.8l-4.24-4.24M6.34 17.66l-4.24 4.24M23 12h-6m-6 0H1m20.24-4.24l-4.24 4.24M6.34 6.34l-4.24-4.24"/></svg>
+                <span>Fundamentals</span>
+                <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </li>
+            <ul class="submenu" id="submenu-fundamentals">
+                <li class="nav-item" data-section="networking"><span>Networking</span></li>
+                <li class="nav-item" data-section="linux"><span>Linux & OS</span></li>
+            </ul>
+            <li class="nav-item has-submenu" data-toggle="platforms">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                <span>Platforms</span>
+                <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </li>
+            <ul class="submenu" id="submenu-platforms">
+                <li class="nav-item" data-section="cloud"><span>Cloud (AWS/GCP/Azure)</span></li>
+                <li class="nav-item" data-section="containers"><span>Containers & K8s</span></li>
+            </ul>
+            <li class="nav-item has-submenu" data-toggle="advanced">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.2.04.4.1.57.18h.03z"/></svg>
+                <span>Advanced</span>
+                <svg class="submenu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </li>
+            <ul class="submenu" id="submenu-advanced">
+                <li class="nav-item" data-section="devops"><span>DevOps & CI/CD</span></li>
+                <li class="nav-item" data-section="security"><span>Security</span></li>
+                <li class="nav-item" data-section="monitoring"><span>Monitoring & SRE</span></li>
+                <li class="nav-item" data-section="automation"><span>IaC & Automation</span></li>
+            </ul>
+        </ul>
+
+        <div class="nav-section-title">Career & Practice</div>
+        <ul class="nav-menu">
+            <li class="nav-item" data-section="career">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/></svg>
+                <span>Career Track</span>
+            </li>
+            <li class="nav-item" data-section="projects">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span>Projects</span>
+            </li>
+            <li class="nav-item" data-section="companies">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-2"/></svg>
+                <span>Companies</span>
+            </li>
+            <li class="nav-item" data-section="interview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Interview Prep</span>
+            </li>
+            <li class="nav-item" data-section="quiz">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                <span>Quiz</span>
+            </li>
+        </ul>
+
+        <div class="nav-section-title">Tools & Resources</div>
+        <ul class="nav-menu">
+            <li class="nav-item" data-section="tools">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                <span>Tools</span>
+            </li>
+            <li class="nav-item" data-section="snippets">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-6"/><path d="M10 20l4-4"/></svg>
+                <span>Snippets</span>
+            </li>
+            <li class="nav-item" data-section="resources">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span>Resources</span>
+            </li>
+            <li class="nav-item" data-section="community">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <span>Community</span>
+            </li>
+        </ul>
+
+        <div class="nav-section-title">Practice</div>
+        <ul class="nav-menu">
+            <li class="nav-item" data-section="quiz">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                <span>Quiz & Tests</span>
+            </li>
+            <li class="nav-item" data-section="flashcards">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                <span>Flashcards</span>
+            </li>
+            <li class="nav-item" data-section="lab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 2v7.31"/><rect x="2" y="9" width="20" height="12" rx="2"/></svg>
+                <span>Hands-on Labs</span>
+            </li>
+        </ul>
+
+        <div class="nav-section-title">Personal</div>
+        <ul class="nav-menu">
+            <li class="nav-item" data-section="profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>My Profile</span>
+            </li>
+            <li class="nav-item" data-section="bookmarks">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                <span>Bookmarks</span>
+                <span class="nav-badge" id="bookmark-badge">0</span>
+            </li>
+            <li class="nav-item" data-section="notes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Study Notes</span>
+            </li>
+        </ul>
+
+        <div class="nav-section-title">Community</div>
+        <ul class="nav-menu">
+            <li class="nav-item" data-section="reviews">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Reviews & Tips</span>
+            </li>
+            <li class="nav-item" data-section="resources">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>Resources</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <button id="study-timer-btn" class="footer-btn" title="Study Timer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Focus Timer</span>
+            </button>
+            <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="breadcrumb" id="breadcrumb">
+                <span class="breadcrumb-icon">&#128640;</span>
+                <span id="breadcrumb-text">Dashboard</span>
+            </div>
+            <div class="top-bar-actions">
+                <div class="study-streak" id="study-streak" title="Study Streak">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <span id="streak-count">0 days</span>
+                </div>
+                <div class="xp-badge" id="xp-badge" title="Experience Points">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span id="xp-count">0 XP</span>
+                </div>
+                <span class="current-time" id="current-time"></span>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area" id="content-area">
+            <!-- Dashboard Section -->
+            <section id="section-dashboard" class="section active">
+                <div class="welcome-banner">
+                    <div class="welcome-content">
+                        <div class="welcome-text">
+                            <div class="welcome-greeting" id="welcome-greeting">Welcome back!</div>
+                            <h1>Master Infrastructure & DevOps</h1>
+                            <p>Your comprehensive learning platform for Cloud, Networking, Linux, Kubernetes, and more. Track your progress, test your knowledge, and advance your career.</p>
+                            <div class="welcome-actions">
+                                <button class="btn btn-primary" data-navigate="learning-path">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    Continue Learning
+                                </button>
+                                <button class="btn btn-secondary" data-navigate="quiz">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                                    Take a Quiz
+                                </button>
+                            </div>
+                        </div>
+                        <div class="welcome-stats" id="welcome-stats"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="stat-card" data-navigate="networking">
+                        <div class="stat-icon networking">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m18.8 18.8l-4.24-4.24M6.34 17.66l-4.24 4.24M23 12h-6m-6 0H1m20.24-4.24l-4.24 4.24M6.34 6.34l-4.24-4.24"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Networking</h3>
+                            <p>TCP/IP, DNS, BGP, VLAN, Load Balancing, Firewalls</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-networking" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="cloud">
+                        <div class="stat-icon cloud">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Cloud Platform</h3>
+                            <p>AWS, GCP, Azure - Services, Architecture, Best Practices</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-cloud" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="linux">
+                        <div class="stat-icon linux">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Linux & OS</h3>
+                            <p>Commands, System Admin, Filesystem, Kernel, Processes</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-linux" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="containers">
+                        <div class="stat-icon containers">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Containers & K8s</h3>
+                            <p>Docker, Kubernetes, Helm, Service Mesh, Security</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-containers" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="devops">
+                        <div class="stat-icon devops">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>DevOps & CI/CD</h3>
+                            <p>Git, Jenkins, GitHub Actions, ArgoCD, GitOps</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-devops" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="security">
+                        <div class="stat-icon security">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Security</h3>
+                            <p>Zero Trust, IAM, Encryption, Compliance, Hardening</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-security" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="monitoring">
+                        <div class="stat-icon monitoring">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Monitoring & SRE</h3>
+                            <p>Prometheus, Grafana, ELK, Alerting, Incident Response</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-monitoring" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-navigate="automation">
+                        <div class="stat-icon automation">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>IaC & Automation</h3>
+                            <p>Terraform, Ansible, Pulumi, CloudFormation</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-automation" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sections">
+                    <div class="section-card">
+                        <h2>Quick Reference</h2>
+                        <div class="cheatsheet-grid" id="cheatsheet-grid"></div>
+                    </div>
+                    <div class="section-card">
+                        <h2>Recent Activity</h2>
+                        <div class="activity-list" id="activity-list">
+                            <div class="activity-empty">Start learning to see your activity here!</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic content sections -->
+            <section id="section-learning-path" class="section"></section>
+            <section id="section-networking" class="section"></section>
+            <section id="section-cloud" class="section"></section>
+            <section id="section-linux" class="section"></section>
+            <section id="section-containers" class="section"></section>
+            <section id="section-devops" class="section"></section>
+            <section id="section-security" class="section"></section>
+            <section id="section-monitoring" class="section"></section>
+            <section id="section-automation" class="section"></section>
+            <section id="section-quiz" class="section"></section>
+            <section id="section-flashcards" class="section"></section>
+            <section id="section-lab" class="section"></section>
+            <section id="section-interview" class="section"></section>
+            <section id="section-career" class="section"></section>
+            <section id="section-projects" class="section"></section>
+            <section id="section-community" class="section"></section>
+            <section id="section-tools" class="section"></section>
+            <section id="section-analytics" class="section"></section>
+            <section id="section-companies" class="section"></section>
+            <section id="section-snippets" class="section"></section>
+            <section id="section-profile" class="section"></section>
+            <section id="section-bookmarks" class="section"></section>
+            <section id="section-notes" class="section"></section>
+            <section id="section-reviews" class="section"></section>
+        </div>
+    </main>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="search-modal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="search-modal-input" placeholder="Search topics, commands, concepts...">
+                <kbd>ESC</kbd>
+            </div>
+            <div class="search-filters" id="search-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="beginner">Beginner</button>
+                <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+                <button class="filter-btn" data-filter="advanced">Advanced</button>
+            </div>
+            <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Topic Detail Modal -->
+    <div id="topic-modal" class="topic-modal">
+        <div class="topic-modal-content">
+            <div class="topic-modal-header">
+                <div class="topic-header-info">
+                    <span class="topic-category" id="topic-category"></span>
+                    <h2 id="topic-modal-title"></h2>
+                </div>
+                <div class="topic-modal-actions">
+                    <button id="mark-learned-btn" class="icon-btn" title="Mark as learned">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </button>
+                    <button id="bookmark-btn" class="icon-btn" title="Bookmark this topic">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                    </button>
+                    <button id="close-topic-modal" class="icon-btn" title="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="topic-modal-body" id="topic-modal-body"></div>
+            <div class="topic-modal-footer">
+                <button id="prev-topic-btn" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                    Previous
+                </button>
+                <button id="next-topic-btn" class="btn btn-primary">
+                    Next
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Timer Modal -->
+    <div id="timer-modal" class="timer-modal">
+        <div class="timer-modal-content">
+            <div class="timer-header">
+                <h3>Focus Timer</h3>
+                <button id="close-timer" class="icon-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="timer-display">
+                <div class="timer-circle">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="timer-bg" cx="50" cy="50" r="45"/>
+                        <circle class="timer-progress" id="timer-progress" cx="50" cy="50" r="45"/>
+                    </svg>
+                    <div class="timer-text" id="timer-text">25:00</div>
+                </div>
+            </div>
+            <div class="timer-controls">
+                <button id="timer-toggle" class="btn btn-primary">Start</button>
+                <button id="timer-reset" class="btn btn-secondary">Reset</button>
+            </div>
+            <div class="timer-presets">
+                <button class="preset-btn" data-time="25">Pomodoro (25m)</button>
+                <button class="preset-btn" data-time="45">Deep Work (45m)</button>
+                <button class="preset-btn" data-time="5">Short Break (5m)</button>
+                <button class="preset-btn" data-time="15">Long Break (15m)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/linux-data.js"></script>
+    <script src="js/k8s-data.js"></script>
+    <script src="js/cloud-data.js"></script>
+    <script src="js/devops-data.js"></script>
+    <script src="js/interview-data.js"></script>
+    <script src="js/tools-data.js"></script>
+    <script src="js/additional-tools.js"></script>
+    <script src="js/career-data.js"></script>
+    <script src="js/community-data.js"></script>
+    <script src="js/projects-data.js"></script>
+    <script src="js/dashboard-data.js"></script>
+    <script src="js/company-interview-data.js"></script>
+    <script src="js/more-companies-data.js"></script>
+    <script src="js/resources-data.js"></script>
+    <script src="js/snippets-data.js"></script>
+    <script src="js/quiz-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SisTerPar Hub - Distributed & Parallel Systems</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27, #1a1a4d, #0d0f2d);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .icon-gradient {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid #3b82f6;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .diagram-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 2px dashed rgba(59, 130, 246, 0.3);
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .nav-link {
+            position: relative;
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .protocol-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 24px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .protocol-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .lab-exercise {
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .lab-exercise.completed {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .lab-exercise.pending {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .architecture-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .node {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 120px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .node.secondary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        }
+
+        .connection-line {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            position: relative;
+        }
+
+        .connection-line::before,
+        .connection-line::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid #3b82f6;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subsection-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .floating-bg {
+            position: fixed;
+            font-size: 150px;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-bg:nth-child(1) {
+            top: 10%;
+            left: 5%;
+        }
+
+        .floating-bg:nth-child(2) {
+            top: 50%;
+            right: 10%;
+        }
+
+        .floating-bg:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+        }
+
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .tab-button {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #e0e0e0;
+            padding: 10px 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .content-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #c0c0c0;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-bg"><i class="fas fa-network-wired"></i></div>
+    <div class="floating-bg"><i class="fas fa-server"></i></div>
+    <div class="floating-bg"><i class="fas fa-code-branch"></i></div>
+
+    <!-- Navigation -->
+    <nav class="glass-dark fixed top-0 w-full z-50 backdrop-blur-md border-b border-blue-500/20">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold gradient-text">SisTerPar Hub</div>
+            <div class="hidden md:flex gap-8 text-sm">
+                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#ipc" class="nav-link">IPC/Socket</a>
+                <a href="#rpc" class="nav-link">RPC</a>
+                <a href="#indirect" class="nav-link">Indirect Comm</a>
+                <a href="#middleware" class="nav-link">Middleware</a>
+                <a href="#replication" class="nav-link">Replication</a>
+                <a href="#consensus" class="nav-link">Consensus</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="dashboard" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h1 class="text-6xl md:text-7xl font-bold mb-4 gradient-text">
+                SisTerPar Hub
+            </h1>
+            <h2 class="text-3xl font-bold text-purple-400 mb-6">
+                Distributed & Parallel Systems Knowledge Base
+            </h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Platform pembelajaran komprehensif untuk sistem terdistribusi, parallel processing, dan arsitektur komputasi modern dengan fokus pada praktik industri.
+            </p>
+            <div class="glass p-8 max-w-3xl mx-auto">
+                <p class="text-lg text-gray-300 mb-4">
+                    Jelajahi fundamental sistem terdistribusi mulai dari Inter-Process Communication, Remote Procedure Calls, hingga advanced concepts seperti consensus algorithms dan distributed replication.
+                </p>
+                <div class="flex gap-4 justify-center flex-wrap">
+                    <button class="btn-primary">Mulai Belajar</button>
+                    <button class="btn-primary" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3);">Lihat Lab</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IPC & Socket Section -->
+    <section id="ipc" class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">🔌 IPC & Socket Programming</h2>
+
+            <div class="glass p-8 mb-8">
+                <h3 class="subsection-title">Inter-Process Communication Concepts</h3>
+                <p class="content-text">
+                    Inter-Process Communication (IPC) adalah mekanisme untuk proses-proses yang berjalan pada sistem operasi yang sama untuk berkomunikasi dan bertukar data. IPC fundamental untuk membangun sistem terdistribusi yang efisien.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-share"></i> Pipes (Pipa)</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li>• Unnamed pipes untuk parent-child process</li>
+                            <li>• Named pipes untuk arbitrary processes</li>
+                            <li>• FIFO data structure</li>
+                            <li>• Satu arah komunikasi</li>
+                        </ul>
+                    </div>
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-cube"></i> Message Queues</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li>• POSIX message queues</li>
+                            <li>• Asynchronous komunikasi</li>
+                            <li>• Prioritas message support</li>
+                            <li>• Bidirectional communication</li>
+                        </ul>
+                    </div>
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-lock"></i> Shared Memory</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li>• Fast direct memory access</li>
+                            <li>• Memerlukan synchronization</li>
+                            <li>• Mutex dan semaphore</li>
+                            <li>• Low latency communication</li>
+                        </ul>
+                    </div>
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-signal"></i> Signals</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li>• Asynchronous notifications</li>
+                            <li>• Signal handling mechanism</li>
+                            <li>• Simple komunikasi</li>
+                            <li>• Event-driven architecture</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block mt-8">
+// Socket Programming Example (TCP Client-Server)
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;string.h&gt;
+
+// Server Socket Creation
+int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+struct sockaddr_in server_addr;
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(PORT);
+server_addr.sin_addr.s_addr = INADDR_ANY;
+
+bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr));
+listen(server_socket, 5);
+
+// Client Socket Creation
+int client_socket = socket(AF_INET, SOCK_STREAM, 0);
+connect(client_socket, (struct sockaddr *)&server_addr, sizeof(server_addr));
+                </div>
+            </div>
+
+            <div class="glass p-8">
+                <h3 class="subsection-title">Socket Architecture Diagram</h3>
+                <div class="diagram-box">
+                    <div class="architecture-diagram" style="width: 100%;">
+                        <div class="node">Server Socket</div>
+                        <div class="connection-line"></div>
+                        <div class="node">Network Interface</div>
+                        <div class="connection-line"></div>
+                        <div class="node">Client Socket</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RPC Section -->
+    <section id="rpc" class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">📞 Remote Procedure Calls</h2>
+
+            <div class="glass p-8 mb-8">
+                <h3 class="subsection-title">RPC Fundamentals</h3>
+                <p class="content-text">
+                    Remote Procedure Call (RPC) adalah protokol yang memungkinkan program untuk memanggil fungsi pada mesin remote seolah-olah memanggil lokal. RPC abstraksi networking complexity dan menyediakan transparent remote execution.
+                </p>
+
+                <div class="diagram-box mt-8">
+                    <div style="text-align: left; width: 100%;">
+                        <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px;">
+                            <div>
+                                <strong class="text-blue-400">Client Process</strong>
+                                <div class="text-xs mt-2">
+                                    <div>1. Call RPC Stub</div>
+                                    <div>2. Marshal Arguments</div>
+                                    <div>3. Send Request</div>
+                                </div>
+                            </div>
+                            <div class="connection-line" style="width: 80px; margin: 0 20px;"></div>
+                            <div>
+                                <strong class="text-blue-400">Network</strong>
+                                <div class="text-xs mt-2">
+                                    <div>Data Transmission</div>
+                                    <div>Protocol</div>
+                                </div>
+                            </div>
+                            <div class="connection-line" style="width: 80px; margin: 0 20px;"></div>
+                            <div>
+                                <strong class="text-blue-400">Server Process</strong>
+                                <div class="text-xs mt-2">
+                                    <div>1. Receive Request</div>
+                                    <div>2. Unmarshal Args</div>
+                                    <div>3. Execute Procedure</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-purple-400 font-bold mt-8 mb-4">RPC Implementation Types</h4>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="protocol-card">
+                        <h5 class="text-blue-400 font-bold mb-3">Sun RPC</h5>
+                        <ul class="text-sm space-y-1">
+                            <li>• XDR encoding format</li>
+                            <li>• UDP/TCP protocols</li>
+                            <li>• Portmapper service</li>
+                            <li>• NFS implementation</li>
+                        </ul>
+                    </div>
+                    <div class="protocol-card">
+                        <h5 class="text-blue-400 font-bold mb-3">XML-RPC</h5>
+                        <ul class="text-sm space-y-1">
+                            <li>• XML-based format</li>
+                            <li>• HTTP protocol</li>
+                            <li>• Platform independent</li>
+                            <li>• Human readable</li>
+                        </ul>
+                    </div>
+                    <div class="protocol-card">
+                        <h5 class="text-blue-400 font-bold mb-3">gRPC</h5>
+                        <ul class="text-sm space-y-1">
+                            <li>• Protocol Buffers</li>
+                            <li>• HTTP/2 protocol</li>
+                            <li>• Streaming support</li>
+                            <li>• Modern architecture</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block mt-8">
+// gRPC Service Definition (Proto3)
+syntax = "proto3";
+
+service CalculatorService {
+    rpc Add(AddRequest) returns (AddResponse) {}
+    rpc Subtract(SubtractRequest) returns (SubtractResponse) {}
+    rpc Multiply(MultiplyRequest) returns (MultiplyResponse) {}
+}
+
+message AddRequest {
+    int32 a = 1;
+    int32 b = 2;
+}
+
+message AddResponse {
+    int32 result = 1;
+}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Indirect Communication Section -->
+    <section id="indirect" class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">📨 Indirect Communication</h2>
+
+            <div class="glass p-8 mb-8">
+                <h3 class="subsection-title">Message-Oriented Middleware</h3>
+                <p class="content-text">
+                    Indirect communication memisahkan sender dan receiver secara temporal dan spatial. Sistem tidak memerlukan knowledge langsung tentang masing-masing.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 mt-8">
+                    <div>
+                        <h4 class="text-purple-400 font-bold mb-4">Publish-Subscribe Pattern</h4>
+                        <div class="protocol-card">
+                            <div class="space-y-3">
+                                <div>
+                                    <strong class="text-blue-300">Publisher</strong>
+                                    <p class="text-sm text-gray-400">Mengirim message ke topic tanpa mengetahui subscribers</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Subscriber</strong>
+                                    <p class="text-sm text-gray-400">Menerima messages dari topic yang disubscribe</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Message Broker</strong>
+                                    <p class="text-sm text-gray-400">Mengelola distribution dan routing messages</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-purple-400 font-bold mb-4">Queue Pattern</h4>
+                        <div class="protocol-card">
+                            <div class="space-y-3">
+                                <div>
+                                    <strong class="text-blue-300">Producer</strong>
+                                    <p class="text-sm text-gray-400">Mengirim message ke queue</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Consumer</strong>
+                                    <p class="text-sm text-gray-400">Mengkonsumsi message dari queue</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Queue Manager</strong>
+                                    <p class="text-sm text-gray-400">FIFO ordering dan delivery guarantee</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block mt-8">
+// RabbitMQ Publisher-Subscriber Example
+import pika
+
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+
+# Declare exchange
+channel.exchange_declare(exchange='logs', exchange_type='fanout')
+
+# Publish message
+channel.basic_publish(exchange='logs', routing_key='', body='System message')
+
+# Consumer
+def callback(ch, method, properties, body):
+    print(f"Received message: {body}")
+
+result = channel.queue_declare(queue='', exclusive=True)
+queue_name = result.method.queue
+channel.queue_bind(exchange='logs', queue=queue_name)
+channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Middleware Section -->
+    <section id="middleware" class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">🔧 Middleware & Services</h2>
+
+            <div class="glass p-8 mb-8">
+                <h3 class="subsection-title">Middleware Types</h3>
+
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-code"></i> Object Middleware</h4>
+                        <p class="text-sm text-gray-300 mb-3">Abstraksi object distribution untuk remote object invocation</p>
+                        <ul class="text-sm space-y-1">
+                            <li>• CORBA (Common Object Request Broker)</li>
+                            <li>• Java RMI</li>
+                            <li>• Object marshalling</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-code"></i> Service Middleware</h4>
+                        <p class="text-sm text-gray-300 mb-3">Platform untuk service discovery dan orchestration</p>
+                        <ul class="text-sm space-y-1">
+                            <li>• Service registry</li>
+                            <li>• Service discovery</li>
+                            <li>• Load balancing</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-database"></i> Data Middleware</h4>
+                        <p class="text-sm text-gray-300 mb-3">Abstraksi data access dan persistence</p>
+                        <ul class="text-sm space-y-1">
+                            <li>• ORM frameworks</li>
+                            <li>• Database abstraction</li>
+                            <li>• Cache layer</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-link"></i> Message Middleware</h4>
+                        <p class="text-sm text-gray-300 mb-3">Message-oriented komunikasi antar services</p>
+                        <ul class="text-sm space-y-1">
+                            <li>• Message brokers</li>
+                            <li>• Event streaming</li>
+                            <li>• Async processing</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4 class="text-purple-400 font-bold mt-8 mb-4">Microservices Architecture</h4>
+                <div class="diagram-box">
+                    <div style="text-align: left; width: 100%; font-size: 0.9rem;">
+                        <div style="margin-bottom: 20px;">
+                            <strong class="text-blue-400">Service Layer:</strong>
+                            <div class="flex gap-3 flex-wrap mt-2">
+                                <div style="background: rgba(59, 130, 246, 0.2); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.4);">Auth Service</div>
+                                <div style="background: rgba(59, 130, 246, 0.2); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.4);">User Service</div>
+                                <div style="background: rgba(59, 130, 246, 0.2); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.4);">Order Service</div>
+                                <div style="background: rgba(59, 130, 246, 0.2); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.4);">Payment Service</div>
+                            </div>
+                        </div>
+                        <div style="margin: 20px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);"></div>
+                        <div style="margin-bottom: 20px;">
+                            <strong class="text-blue-400">Communication Layer:</strong>
+                            <div style="margin-top: 8px;">API Gateway, Service Mesh, Message Broker</div>
+                        </div>
+                        <div style="margin: 20px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);"></div>
+                        <div>
+                            <strong class="text-blue-400">Data Layer:</strong>
+                            <div style="margin-top: 8px;">Database Per Service Pattern, Distributed Cache</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Replication Section -->
+    <section id="replication" class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">🔄 Replication & Consistency</h2>
+
+            <div class="glass p-8 mb-8">
+                <h3 class="subsection-title">Replication Strategies</h3>
+
+                <div class="grid md:grid-cols-2 gap-8 mt-6">
+                    <div>
+                        <h4 class="text-purple-400 font-bold mb-4">Master-Slave Replication</h4>
+                        <div class="protocol-card">
+                            <div class="space-y-3">
+                                <div>
+                                    <strong class="text-blue-300">Master</strong>
+                                    <p class="text-sm text-gray-400">Menerima write operations</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Slave</strong>
+                                    <p class="text-sm text-gray-400">Replicate data dari master</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Kelebihan</strong>
+                                    <p class="text-sm text-gray-400">Simple implementation, read scaling</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Kekurangan</strong>
+                                    <p class="text-sm text-gray-400">Single point of failure, replication lag</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-purple-400 font-bold mb-4">Multi-Master Replication</h4>
+                        <div class="protocol-card">
+                            <div class="space-y-3">
+                                <div>
+                                    <strong class="text-blue-300">Multiple Masters</strong>
+                                    <p class="text-sm text-gray-400">Semua nodes bisa handle writes</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Synchronization</strong>
+                                    <p class="text-sm text-gray-400">Conflict resolution mechanism</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Kelebihan</strong>
+                                    <p class="text-sm text-gray-400">High availability, no single point of failure</p>
+                                </div>
+                                <div>
+                                    <strong class="text-blue-300">Kekurangan</strong>
+                                    <p class="text-sm text-gray-400">Conflict handling complexity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-purple-400 font-bold mt-8 mb-4">Consistency Models</h4>
+                <div class="overflow-x-auto mt-4">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Description</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Strong Consistency</strong></td>
+                                <td>Immediate update visibility setelah write</td>
+                                <td>Banking systems, financial transactions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eventual Consistency</strong></td>
+                                <td>Delayed consistency, eventually consistent state</td>
+                                <td>Social media, DNS systems</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Causal Consistency</strong></td>
+                                <td>Preserve causal relationships antar operations</td>
+                                <td>Distributed databases, message systems</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Read-Your-Writes</strong></td>
+                                <td>Client melihat own writes immediately</td>
+                                <td>Session-based applications</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Consensus Section -->
+    <section id="consensus" class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">🤝 Consensus Algorithms</h2>
+
+            <div class="glass p-8 mb-8">
+                <h3 class="subsection-title">Distributed Consensus</h3>
+                <p class="content-text">
+                    Consensus algorithms memastikan semua nodes dalam distributed system mencapai agreement tentang state meskipun menghadapi network failures atau byzantine faults.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6 mt-8">
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-network-wired"></i> Raft</h4>
+                        <ul class="text-sm space-y-2">
+                            <li>• Leader-based consensus</li>
+                            <li>• Log replication</li>
+                            <li>• Understandable algorithm</li>
+                            <li>• Used: etcd, Consul</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-network-wired"></i> Paxos</h4>
+                        <ul class="text-sm space-y-2">
+                            <li>• Classic algorithm</li>
+                            <li>• Byzantine-tolerant</li>
+                            <li>• Complex implementation</li>
+                            <li>• Used: Google Chubby</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-card">
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fas fa-network-wired"></i> PBFT</h4>
+                        <ul class="text-sm space-y-2">
+                            <li>• Byzantine Fault Tolerant</li>
+                            <li>• Practical implementation</li>
+                            <li>• Async operations</li>
+                            <li>• Used: Blockchain systems</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4 class="text-purple-400 font-bold mt-8 mb-4">Raft Algorithm Flow</h4>
+                <div class="diagram-box">
+                    <div style="text-align: left;">
+                        <div style="margin-bottom: 15px;">
+                            <strong class="text-blue-400">1. Leader Election</strong>
+                            <div class="text-sm text-gray-400 mt-1">Followers mengirim RequestVote RPCs ke candidates selama timeout period</div>
+                        </div>
+                        <div style="margin: 15px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);"></div>
+                        <div style="margin-bottom: 15px;">
+                            <strong class="text-blue-400">2. Log Replication</strong>
+                            <div class="text-sm text-gray-400 mt-1">Leader menerima client requests dan replicate log entries ke followers</div>
+                        </div>
+                        <div style="margin: 15px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);"></div>
+                        <div>
+                            <strong class="text-blue-400">3. Safety</strong>
+                            <div class="text-sm text-gray-400 mt-1">Memastikan log konsistency dan state machine safety</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block mt-8">
+// Raft Consensus Pseudocode
+class RaftNode {
+    private int currentTerm;
+    private int votedFor;
+    private LogEntry[] log;
+
+    void AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, entries[], leaderCommit) {
+        if (term < currentTerm) return false;
+
+        if (prevLogIndex > 0 && log[prevLogIndex].term != prevLogTerm) {
+            return false;
+        }
+
+        // Append entries dan update commitIndex
+        for (LogEntry entry : entries) {
+            log.append(entry);
+        }
+
+        if (leaderCommit > commitIndex) {
+            commitIndex = min(leaderCommit, log.length - 1);
+        }
+
+        return true;
+    }
+}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lab Exercises Section -->
+    <section class="py-20 section relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-title">🧪 Lab Exercises & Assignments</h2>
+
+            <div class="glass p-8">
+                <h3 class="subsection-title">Learning Exercises Tracker</h3>
+
+                <div class="space-y-4">
+                    <div class="lab-exercise completed">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong class="text-green-400">Lab 1: Socket Programming</strong>
+                                <p class="text-sm text-gray-400">Implementasi TCP client-server communication</p>
+                            </div>
+                            <span class="text-green-400 text-sm">✓ Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="lab-exercise completed">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong class="text-green-400">Lab 2: RPC Implementation</strong>
+                                <p class="text-sm text-gray-400">Membangun simple RPC framework dengan marshalling</p>
+                            </div>
+                            <span class="text-green-400 text-sm">✓ Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="lab-exercise completed">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong class="text-green-400">Lab 3: Message Queue System</strong>
+                                <p class="text-sm text-gray-400">Implementasi message broker dengan pub-sub pattern</p>
+                            </div>
+                            <span class="text-green-400 text-sm">✓ Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="lab-exercise pending">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong class="text-amber-400">Lab 4: Distributed Consensus</strong>
+                                <p class="text-sm text-gray-400">Implementasi simplified Raft algorithm</p>
+                            </div>
+                            <span class="text-amber-400 text-sm">In Progress</span>
+                        </div>
+                    </div>
+
+                    <div class="lab-exercise pending">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong class="text-amber-400">Lab 5: Microservices Architecture</strong>
+                                <p class="text-sm text-gray-400">Build complete microservices system dengan service discovery</p>
+                            </div>
+                            <span class="text-amber-400 text-sm">Not Started</span>
+                        </div>
+                    </div>
+
+                    <div class="lab-exercise pending">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong class="text-amber-400">Lab 6: Distributed Database Replication</strong>
+                                <p class="text-sm text-gray-400">Implementasi master-slave dan multi-master replication</p>
+                            </div>
+                            <span class="text-amber-400 text-sm">Not Started</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-dark border-t border-blue-500/20 py-8 relative z-10">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-gray-400 mb-4">© 2024 SisTerPar Hub - Distributed & Parallel Systems Learning Platform</p>
+            <p class="text-gray-500 text-sm">Computer Science Education | Advanced Systems Course</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(0, 0, 0, 0.5)';
+            } else {
+                navbar.style.background = 'rgba(0, 0, 0, 0.2)';
+            }
+        });
+    </script>
+</body>
+</html>

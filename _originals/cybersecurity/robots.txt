@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /api/v1/
+Allow: /docs
+Allow: /redoc
+Disallow: /api/v1/admin/
+Disallow: /api/v1/internal/
+
+Sitemap: https://heyibnu.com/cybersecurity/sitemap.xml

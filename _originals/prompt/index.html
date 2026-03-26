@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptCraft - AI Prompt Engineering Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .prompt-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn.copied {
+            background-color: #10b981;
+        }
+
+        .badge-filter {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .badge-filter.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-100">
+    <!-- Navigation -->
+    <nav class="glassmorphism sticky top-0 z-50 mx-4 mt-4 mb-4">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">✨</span>
+                    </div>
+                    <h1 class="gradient-text text-2xl font-bold">PromptCraft</h1>
+                </div>
+                <p class="text-gray-400 text-sm">AI Prompt Engineering Hub</p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tab Navigation -->
+    <div class="max-w-7xl mx-auto px-4 mb-8">
+        <div class="glassmorphism overflow-x-auto">
+            <div class="flex space-x-2 p-4">
+                <button class="tab-btn active px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600" data-tab="dashboard">📊 Dashboard</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="basics">📚 Dasar Prompt</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="advanced">🚀 Teknik Lanjut</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="templates">📋 Template</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="chatgpt">💬 ChatGPT Tips</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="midjourney">🎨 Midjourney</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="system">⚙️ System Prompts</button>
+                <button class="tab-btn px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-white/10" data-tab="testing">🧪 Testing</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 pb-12">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glassmorphism p-6 animate-float">
+                    <div class="text-4xl font-bold gradient-text mb-2">1,247</div>
+                    <p class="text-gray-400">Prompt Templates</p>
+                    <div class="mt-4 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-1/3"></div>
+                </div>
+                <div class="glassmorphism p-6 animate-float" style="animation-delay: 0.2s">
+                    <div class="text-4xl font-bold gradient-text mb-2">89%</div>
+                    <p class="text-gray-400">Success Rate</p>
+                    <div class="mt-4 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full w-2/3"></div>
+                </div>
+                <div class="glassmorphism p-6 animate-float" style="animation-delay: 0.4s">
+                    <div class="text-4xl font-bold gradient-text mb-2">432k</div>
+                    <p class="text-gray-400">User Aktif</p>
+                    <div class="mt-4 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full w-3/4"></div>
+                </div>
+            </div>
+
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">🎯 Quick Start</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
+                        <span class="text-2xl">1️⃣</span>
+                        <div>
+                            <h3 class="font-semibold">Pahami Struktur Dasar</h3>
+                            <p class="text-gray-400 text-sm">Setiap prompt yang efektif memiliki role, konteks, dan instruksi yang jelas.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
+                        <span class="text-2xl">2️⃣</span>
+                        <div>
+                            <h3 class="font-semibold">Iterasi dan Refinement</h3>
+                            <p class="text-gray-400 text-sm">Uji prompt Anda, analisis hasilnya, dan lakukan perbaikan berkelanjutan.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition">
+                        <span class="text-2xl">3️⃣</span>
+                        <div>
+                            <h3 class="font-semibold">Dokumentasi Prompt</h3>
+                            <p class="text-gray-400 text-sm">Simpan template yang berhasil dengan catatan hasil dan use case-nya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basics Tab -->
+        <div id="basics" class="tab-content">
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">📚 Fondasi Prompt Engineering</h2>
+
+                <div class="space-y-6">
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="text-xl font-bold mb-3 text-purple-400">Struktur Dasar Prompt</h3>
+                        <div class="code-block bg-black/30 p-4 rounded-lg overflow-x-auto text-sm">
+                            <pre class="text-green-400">[ROLE]: Kamu adalah seorang {ahli}
+[CONTEXT]: Kami sedang mengerjakan {proyek}
+[TASK]: Buat {output}
+[CONSTRAINTS]: Format {spesifik}
+[EXAMPLES]: {contoh input/output}
+[TONE]: Menggunakan gaya {tone}</pre>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                            <h4 class="font-bold mb-3 text-blue-400">✅ Prompt Baik</h4>
+                            <p class="text-sm text-gray-300 mb-3">"Kamu adalah seorang data scientist expert. Analisis dataset e-commerce ini dan identifikasi 3 tren penjualan utama. Format dalam JSON dengan penjelasan singkat."</p>
+                            <div class="h-1 bg-green-500 w-1/2 rounded"></div>
+                        </div>
+                        <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                            <h4 class="font-bold mb-3 text-red-400">❌ Prompt Buruk</h4>
+                            <p class="text-sm text-gray-300 mb-3">"Analisis data ini"</p>
+                            <div class="h-1 bg-red-500 w-1/3 rounded"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-4 text-cyan-400">🎯 Teknik Dasar</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start space-x-3">
+                                <span class="text-purple-400 font-bold">•</span>
+                                <span><strong>Few-shot Learning:</strong> Berikan 2-3 contoh untuk membantu AI memahami pola</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <span class="text-purple-400 font-bold">•</span>
+                                <span><strong>Specificity:</strong> Semakin spesifik, semakin baik hasil yang didapat</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <span class="text-purple-400 font-bold">•</span>
+                                <span><strong>Clarity:</strong> Hindari ambiguitas dan gunakan bahasa yang jelas</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <span class="text-purple-400 font-bold">•</span>
+                                <span><strong>Context Limit:</strong> Jangan berikan terlalu banyak konteks yang tidak relevan</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Techniques Tab -->
+        <div id="advanced" class="tab-content">
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">🚀 Teknik Lanjut</h2>
+
+                <div class="space-y-6">
+                    <div class="p-6 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-500/30 rounded-lg">
+                        <h3 class="text-lg font-bold mb-3">🔗 Chain of Thought</h3>
+                        <p class="text-sm text-gray-300 mb-4">Minta AI untuk menjelaskan pemikiran langkah demi langkah sebelum memberikan jawaban akhir.</p>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400">
+                            <pre>"Mari kita pikirkan ini langkah demi langkah:\n1. Identifikasi masalah\n2. Analisis penyebabnya\n3. Tentukan solusi\n4. Berikan rekomendasi akhir"</pre>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border border-blue-500/30 rounded-lg">
+                        <h3 class="text-lg font-bold mb-3">🤔 Few-shot Prompting</h3>
+                        <p class="text-sm text-gray-300 mb-4">Berikan beberapa contoh untuk memandu AI dalam menghasilkan output yang konsisten.</p>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400">
+                            <pre>"Contoh 1: Input -> Output\nContoh 2: Input -> Output\nSekarang: Input -> ?"</pre>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-lg">
+                        <h3 class="text-lg font-bold mb-3">🎭 Role-Based Prompting</h3>
+                        <p class="text-sm text-gray-300 mb-4">Assign peran spesifik untuk meningkatkan kualitas dan konsistensi response.</p>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400">
+                            <pre>"Kamu adalah seorang {expert/profesional}.\nTugas: {spesifik task}\nOutput format: {format yang diinginkan}"</pre>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-orange-900/30 to-red-900/30 border border-orange-500/30 rounded-lg">
+                        <h3 class="text-lg font-bold mb-3">🔄 Iterative Refinement</h3>
+                        <p class="text-sm text-gray-300 mb-4">Gunakan feedback dari respons sebelumnya untuk menyempurnakan prompt berikutnya.</p>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400">
+                            <pre>"Respons Anda terlalu formal. Coba lagi dengan gaya lebih casual.\nTambahkan juga contoh konkret."</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Tab -->
+        <div id="templates" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">📋 Template Library</h2>
+
+                <div class="mb-6 flex flex-wrap gap-2">
+                    <button class="badge-filter active px-4 py-2 rounded-full text-sm border border-purple-500 text-purple-400 transition" data-filter="all">Semua</button>
+                    <button class="badge-filter px-4 py-2 rounded-full text-sm border border-white/20 text-gray-400 hover:border-purple-500 transition" data-filter="coding">💻 Coding</button>
+                    <button class="badge-filter px-4 py-2 rounded-full text-sm border border-white/20 text-gray-400 hover:border-purple-500 transition" data-filter="writing">✍️ Writing</button>
+                    <button class="badge-filter px-4 py-2 rounded-full text-sm border border-white/20 text-gray-400 hover:border-purple-500 transition" data-filter="analysis">📊 Analysis</button>
+                    <button class="badge-filter px-4 py-2 rounded-full text-sm border border-white/20 text-gray-400 hover:border-purple-500 transition" data-filter="creative">🎨 Creative</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="prompt-card glassmorphism p-6 border border-white/10" data-category="coding">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-bold text-blue-400">Bug Debugger</h3>
+                        <span class="text-xs bg-blue-500/30 px-2 py-1 rounded text-blue-300">Coding</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">"Kamu adalah debug expert. Analisis kode ini, temukan bugs, jelaskan masalahnya, dan berikan solusi. Gunakan bahasa Indonesia."</p>
+                    <button class="copy-btn w-full bg-purple-600/50 hover:bg-purple-600 text-white text-sm py-2 rounded-lg transition glow-button">
+                        📋 Copy Template
+                    </button>
+                </div>
+
+                <div class="prompt-card glassmorphism p-6 border border-white/10" data-category="writing">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-bold text-green-400">Content Creator</h3>
+                        <span class="text-xs bg-green-500/30 px-2 py-1 rounded text-green-300">Writing</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">"Buat artikel blog tentang {topik}. Format: Intro menarik, 3 poin utama, contoh praktis, kesimpulan. Gaya: friendly dan informatif."</p>
+                    <button class="copy-btn w-full bg-purple-600/50 hover:bg-purple-600 text-white text-sm py-2 rounded-lg transition glow-button">
+                        📋 Copy Template
+                    </button>
+                </div>
+
+                <div class="prompt-card glassmorphism p-6 border border-white/10" data-category="analysis">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-bold text-cyan-400">Data Analyzer</h3>
+                        <span class="text-xs bg-cyan-500/30 px-2 py-1 rounded text-cyan-300">Analysis</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">"Analisis dataset ini. Identifikasi pola, anomali, dan tren. Berikan insight actionable dalam format bullet points."</p>
+                    <button class="copy-btn w-full bg-purple-600/50 hover:bg-purple-600 text-white text-sm py-2 rounded-lg transition glow-button">
+                        📋 Copy Template
+                    </button>
+                </div>
+
+                <div class="prompt-card glassmorphism p-6 border border-white/10" data-category="creative">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-bold text-pink-400">Story Generator</h3>
+                        <span class="text-xs bg-pink-500/30 px-2 py-1 rounded text-pink-300">Creative</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">"Tulis cerita pendek tentang {tema}. Karakter: {deskripsi}. Tone: {tone yang diinginkan}. Panjang: 500-800 kata."</p>
+                    <button class="copy-btn w-full bg-purple-600/50 hover:bg-purple-600 text-white text-sm py-2 rounded-lg transition glow-button">
+                        📋 Copy Template
+                    </button>
+                </div>
+
+                <div class="prompt-card glassmorphism p-6 border border-white/10" data-category="coding">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-bold text-blue-400">Code Generator</h3>
+                        <span class="text-xs bg-blue-500/30 px-2 py-1 rounded text-blue-300">Coding</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">"Generate {bahasa pemrograman} code untuk {fungsi}. Sertakan comments, handle errors, dan follow best practices."</p>
+                    <button class="copy-btn w-full bg-purple-600/50 hover:bg-purple-600 text-white text-sm py-2 rounded-lg transition glow-button">
+                        📋 Copy Template
+                    </button>
+                </div>
+
+                <div class="prompt-card glassmorphism p-6 border border-white/10" data-category="writing">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-bold text-green-400">Email Master</h3>
+                        <span class="text-xs bg-green-500/30 px-2 py-1 rounded text-green-300">Writing</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">"Tulis email profesional untuk {keperluan}. Subject: {konteks}. Tone: {formal/casual}. Sertakan CTA yang jelas."</p>
+                    <button class="copy-btn w-full bg-purple-600/50 hover:bg-purple-600 text-white text-sm py-2 rounded-lg transition glow-button">
+                        📋 Copy Template
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ChatGPT Tips Tab -->
+        <div id="chatgpt" class="tab-content">
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">💬 ChatGPT Mastery Tips</h2>
+
+                <div class="space-y-6">
+                    <div class="p-6 bg-white/5 rounded-lg border-l-4 border-purple-500">
+                        <h3 class="font-bold mb-2 text-purple-400">💡 Tip 1: Gunakan Persona</h3>
+                        <p class="text-sm text-gray-300 mb-3">"Kamu adalah {role}. Respons dengan style {gaya}. Gunakan bahasa {bahasa}."</p>
+                        <p class="text-xs text-gray-400">Hasilnya akan lebih konsisten dan sesuai dengan kebutuhan Anda.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="font-bold mb-2 text-blue-400">🎯 Tip 2: Buat Koneksi Konteks</h3>
+                        <p class="text-sm text-gray-300 mb-3">"Ingat bahwa saya {konteks penting}. Harus mempertimbangkan {faktor spesifik}."</p>
+                        <p class="text-xs text-gray-400">Membantu ChatGPT memahami konteks unik situasi Anda.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border-l-4 border-green-500">
+                        <h3 class="font-bold mb-2 text-green-400">🔄 Tip 3: Iterasi Berkelanjutan</h3>
+                        <p class="text-sm text-gray-300 mb-3">"Buat lebih {atribut}. Kurangi {elemen}. Fokus pada {aspek}."</p>
+                        <p class="text-xs text-gray-400">Refinement adalah kunci untuk hasil optimal.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border-l-4 border-pink-500">
+                        <h3 class="font-bold mb-2 text-pink-400">📋 Tip 4: Format Output</h3>
+                        <p class="text-sm text-gray-300 mb-3">"Format hasilnya sebagai: {JSON/Table/Markdown/List}. Struktur dengan: {cara spesifik}."</p>
+                        <p class="text-xs text-gray-400">Spesifikasi format membuat output lebih mudah diproses.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border-l-4 border-cyan-500">
+                        <h3 class="font-bold mb-2 text-cyan-400">🎨 Tip 5: Constraint Creativity</h3>
+                        <p class="text-sm text-gray-300 mb-3">"Ide harus {kriteria spesifik}. Hindari {hal yang tidak diinginkan}. Fokus pada {area}."</p>
+                        <p class="text-xs text-gray-400">Constraint yang tepat menghasilkan kreativitas yang lebih terarah.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Midjourney Tab -->
+        <div id="midjourney" class="tab-content">
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">🎨 Midjourney Prompt Mastery</h2>
+
+                <div class="space-y-6">
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-4 text-purple-400">📐 Struktur Ideal Midjourney Prompt</h3>
+                        <div class="code-block bg-black/30 p-4 rounded text-sm text-green-400 space-y-2">
+                            <div>/imagine prompt: [Subjek] [Deskripsi Detail] [Style/Medium] [Lighting] [Mood] --ar [aspect ratio] --niji</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-lg border border-white/10">
+                            <h4 class="font-bold mb-3 text-purple-400">✅ Prompt Baik</h4>
+                            <p class="text-xs text-gray-300">"cyberpunk city at night, neon lights, futuristic skyscrapers, flying cars, photorealistic, cinematic lighting, volumetric fog --ar 16:9"</p>
+                        </div>
+                        <div class="p-6 bg-gradient-to-br from-orange-900/30 to-red-900/30 rounded-lg border border-white/10">
+                            <h4 class="font-bold mb-3 text-orange-400">❌ Prompt Lemah</h4>
+                            <p class="text-xs text-gray-300">"futuristic city"</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-4 text-cyan-400">🎯 Parameter Penting</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li><strong>--ar 16:9</strong> (aspect ratio) - landscape</li>
+                            <li><strong>--ar 1:1</strong> - square</li>
+                            <li><strong>--ar 9:16</strong> - portrait</li>
+                            <li><strong>--niji</strong> - anime/illustration style</li>
+                            <li><strong>--style raw</strong> - less Midjourney style</li>
+                            <li><strong>--iw 2</strong> - image weight (relative importance)</li>
+                            <li><strong>--q 2</strong> - quality (0.25, 0.5, 1, 2)</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-4 text-green-400">🎨 Style Keywords</h3>
+                        <p class="text-xs text-gray-400 mb-4">Tambahkan untuk hasil lebih spesifik:</p>
+                        <div class="grid grid-cols-2 gap-2 text-xs text-gray-300">
+                            <div>• Photorealistic</div>
+                            <div>• Oil painting</div>
+                            <div>• Watercolor</div>
+                            <div>• Digital art</div>
+                            <div>• 3D render</div>
+                            <div>• Anime style</div>
+                            <div>• Minimalist</div>
+                            <div>• Abstract</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Prompts Tab -->
+        <div id="system" class="tab-content">
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">⚙️ System Prompts Power</h2>
+
+                <div class="space-y-6">
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-3 text-purple-400">Apa itu System Prompt?</h3>
+                        <p class="text-sm text-gray-300 mb-4">Instruksi dasar yang diberikan ke AI sebelum interaksi dimulai. System prompt membentuk personality, behavior, dan constraint dari AI.</p>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-lg border border-blue-500/30">
+                        <h3 class="font-bold mb-3 text-blue-400">Expert Consultant</h3>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400 mb-3">
+                            <pre>"Kamu adalah konsultan expert dengan 20+ tahun pengalaman. Selalu memberikan jawaban berbasis data, cite sources, dan offer solusi praktis."</pre>
+                        </div>
+                        <p class="text-xs text-gray-400">Hasil: Jawaban lebih dalam, kredibel, dan actionable</p>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-lg border border-green-500/30">
+                        <h3 class="font-bold mb-3 text-green-400">Creative Writer</h3>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400 mb-3">
+                            <pre>"Kamu adalah penulis kreatif pemenang award. Gunakan narrative techniques advanced, character development, dan storytelling yang engaging."</pre>
+                        </div>
+                        <p class="text-xs text-gray-400">Hasil: Content lebih vivid, emotional, dan memorable</p>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-pink-900/30 to-rose-900/30 rounded-lg border border-pink-500/30">
+                        <h3 class="font-bold mb-3 text-pink-400">Ethical Advisor</h3>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400 mb-3">
+                            <pre>"Kamu adalah advisor yang selalu mempertimbangkan aspek etika, keberlanjutan, dan dampak sosial dari setiap rekomendasi."</pre>
+                        </div>
+                        <p class="text-xs text-gray-400">Hasil: Solutions yang lebih bertanggung jawab dan sustainable</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testing Tab -->
+        <div id="testing" class="tab-content">
+            <div class="glassmorphism p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6 gradient-text">🧪 Prompt Testing & Evaluation</h2>
+
+                <div class="space-y-8">
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-4 text-purple-400">📊 Framework Evaluasi</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-white/5 rounded">
+                                <span class="font-semibold text-sm">Relevance (Relevansi)</span>
+                                <div class="flex space-x-1">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white/5 rounded">
+                                <span class="font-semibold text-sm">Clarity (Kejelasan)</span>
+                                <div class="flex space-x-1">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white/5 rounded">
+                                <span class="font-semibold text-sm">Completeness (Kelengkapan)</span>
+                                <div class="flex space-x-1">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-container">
+                        <div class="p-6 bg-red-900/20 border border-red-500/30 rounded-lg">
+                            <h4 class="font-bold mb-4 text-red-400">❌ V1 (Poor)</h4>
+                            <p class="text-xs text-gray-300 mb-3"><strong>Prompt:</strong> "Tulis artikel tentang AI"</p>
+                            <p class="text-xs text-gray-300 mb-3"><strong>Score:</strong> 2/10</p>
+                            <p class="text-xs text-gray-400">Terlalu general, tidak ada konteks, format tidak jelas.</p>
+                        </div>
+                        <div class="p-6 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+                            <h4 class="font-bold mb-4 text-yellow-400">⚠️ V2 (Good)</h4>
+                            <p class="text-xs text-gray-300 mb-3"><strong>Prompt:</strong> "Tulis artikel blog SEO-friendly tentang AI untuk marketer"</p>
+                            <p class="text-xs text-gray-300 mb-3"><strong>Score:</strong> 7/10</p>
+                            <p class="text-xs text-gray-400">Better, tapi masih kurang spesifik tentang format dan tone.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-green-900/20 border border-green-500/30 rounded-lg">
+                        <h4 class="font-bold mb-4 text-green-400">✅ V3 (Excellent)</h4>
+                        <p class="text-xs text-gray-300 mb-4"><strong>Prompt:</strong></p>
+                        <div class="code-block bg-black/30 p-3 rounded text-xs text-green-400 mb-4">
+                            <pre>"Tulis artikel blog 1500 kata tentang 'AI untuk Digital Marketers'. Format: Intro hook, 5 section utama, CTA. Tone: friendly profesional. Include examples praktis, internal links suggestions, dan keyword focus: 'AI marketing tools'."</pre>
+                        </div>
+                        <p class="text-xs text-gray-300"><strong>Score:</strong> 9/10 - Spesifik, clear format, actionable output</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+                        <h3 class="font-bold mb-4 text-cyan-400">🔍 Testing Checklist</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>✓ Output sesuai dengan ekspektasi format</li>
+                            <li>✓ Tone dan style konsisten dengan brief</li>
+                            <li>✓ Tidak ada hallucination atau informasi salah</li>
+                            <li>✓ Response time reasonable</li>
+                            <li>✓ Bisa handle variasi input</li>
+                            <li>✓ Follow constraints dan limitations</li>
+                            <li>✓ Output dapat digunakan tanpa banyak edit</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt Builder Tool -->
+    <div class="max-w-7xl mx-auto px-4 pb-12">
+        <div class="glassmorphism p-8">
+            <h2 class="text-2xl font-bold mb-6 gradient-text">🛠️ Interactive Prompt Builder</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">🎭 Role</label>
+                    <input type="text" id="role" placeholder="e.g., data scientist" class="w-full bg-black/30 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">📋 Task</label>
+                    <input type="text" id="task" placeholder="e.g., analyze data" class="w-full bg-black/30 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">🎨 Style</label>
+                    <input type="text" id="style" placeholder="e.g., professional" class="w-full bg-black/30 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-300">📐 Format</label>
+                    <input type="text" id="format" placeholder="e.g., JSON" class="w-full bg-black/30 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500">
+                </div>
+            </div>
+
+            <button id="buildBtn" class="glow-button w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 rounded-lg mb-6 hover:from-purple-700 hover:to-pink-700 transition">
+                🚀 Build Prompt
+            </button>
+
+            <div id="builtPrompt" class="code-block bg-black/30 p-4 rounded-lg text-green-400 text-sm min-h-20 hidden">
+                <pre id="promptOutput"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabName = this.dataset.tab;
+
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-pink-600');
+                    b.classList.add('hover:bg-white/10');
+                });
+                this.classList.remove('hover:bg-white/10');
+                this.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-pink-600');
+            });
+        });
+
+        // Copy to Clipboard
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.closest('.prompt-card').querySelector('p').textContent;
+                navigator.clipboard.writeText(text);
+
+                this.textContent = '✓ Copied!';
+                this.classList.add('copied');
+
+                setTimeout(() => {
+                    this.textContent = '📋 Copy Template';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // Filter Templates
+        document.querySelectorAll('.badge-filter').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const filter = this.dataset.filter;
+
+                document.querySelectorAll('.badge-filter').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('text-gray-400', 'border-white/20');
+                    b.classList.remove('text-purple-400', 'border-purple-500');
+                });
+
+                this.classList.add('active');
+                this.classList.remove('text-gray-400', 'border-white/20');
+                this.classList.add('text-purple-400', 'border-purple-500');
+
+                document.querySelectorAll('.prompt-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Prompt Builder
+        document.getElementById('buildBtn').addEventListener('click', function() {
+            const role = document.getElementById('role').value || 'assistant';
+            const task = document.getElementById('task').value || 'help user';
+            const style = document.getElementById('style').value || 'clear';
+            const format = document.getElementById('format').value || 'text';
+
+            const prompt = `[ROLE]: Kamu adalah seorang ${role}
+[TASK]: ${task}
+[STYLE]: Gunakan gaya ${style}
+[FORMAT]: Berikan output dalam format ${format}
+[CONSTRAINTS]: Jelaskan dengan detail, berikan contoh jika perlu
+[TONE]: Professional namun approachable`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('builtPrompt').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
